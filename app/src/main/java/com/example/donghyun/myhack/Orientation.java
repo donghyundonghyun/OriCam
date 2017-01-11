@@ -16,6 +16,8 @@ import static android.content.Context.SENSOR_SERVICE;
  * Created by DongHyun on 2016-12-20.
  */
 
+// branch test
+
 
 //public class Orientation extends Thread implements SensorEventListener {
 public class Orientation implements SensorEventListener {
@@ -23,6 +25,8 @@ public class Orientation implements SensorEventListener {
     SensorManager m_sensor_manager;
     Sensor m_ot_sensor;
     CameraActivity cameraActivity;
+    int btesttmep;
+    int btesttmep2;
 
     ImageView[] img = new ImageView[3];
 
