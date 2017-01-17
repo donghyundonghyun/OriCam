@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.MapActivity;
 
 import android.app.Application;
 
 /**
  * @author SeJin Lee 
  */
-public class NMapViewerApplication extends Application {
+public class MapViewerApplication extends Application {
 
-	private static NMapViewerApplication instance;
+	private static MapViewerApplication instance;
 
-	public static NMapViewerApplication getInstance() {
+	public static MapViewerApplication getInstance() {
 		return instance;
 	}
 

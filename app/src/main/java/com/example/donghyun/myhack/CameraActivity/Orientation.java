@@ -1,4 +1,4 @@
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.CameraActivity;
 
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -9,6 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.donghyun.myhack.BuildingInfo;
+import com.example.donghyun.myhack.Gpsinfo;
+import com.example.donghyun.myhack.InfoActivity.InfoActivity;
+import com.example.donghyun.myhack.R;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -25,6 +30,7 @@ public class Orientation implements SensorEventListener {
     SensorManager m_sensor_manager;
     Sensor m_ot_sensor;
     CameraActivity cameraActivity;
+    CameraActivityView cav;
     int btesttmep;
     int btesttmep2;
 
@@ -41,13 +47,11 @@ public class Orientation implements SensorEventListener {
     float width;
     float height;
 
-    float[] imgWidth = new float[3];
-    float[] imgHeight = new float[3];
 
-
-    public Orientation(CameraActivity ma)
+    public Orientation(CameraActivity ma, CameraActivityView cav)
     {
         cameraActivity =ma;
+        this.cav=cav;
         gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext());
 
         my = new BuildingInfo(gpsinfo.getLongitude(),gpsinfo.getLatitude(),0);
@@ -66,34 +70,9 @@ public class Orientation implements SensorEventListener {
         img[1] = (ImageView)ma.findViewById(R.id.duck1); //충무관
         img[0] = (ImageView)ma.findViewById(R.id.duck3); //학생
 
-        for(int i=0;i<3;i++) {
-            img[i].getLayoutParams().width = 500;
-            img[i].getLayoutParams().height = 500;
 
-            imgWidth[i]=(float) img[i].getLayoutParams().width;
-            imgHeight[i]=(float) img[i].getLayoutParams().height;
-
-
-            //Log.i("값 비교 -----> " + img.getX()+"",img.getY()+" : " + imgHeight + " : " + img.getHeight());
-            final int finali = i;
-
-            img[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(finali==0)
-                        Toast.makeText(cameraActivity.getApplicationContext(),"더 가까이 가서 선택해주세요",Toast.LENGTH_SHORT).show();
-                    else{
-                        Intent intent = new Intent(cameraActivity.getApplicationContext(), InfoActivity.class);
-                        intent.putExtra("index", finali);
-                        cameraActivity.startActivity(intent);
-                    }
-                }
-            });
-
-        }
-
-        img[0].getLayoutParams().width = 200;
-        img[0].getLayoutParams().height = 200;
+        //img[0].getLayoutParams().width = 200;
+        //img[0].getLayoutParams().height = 200;
 
         // 시스템서비스로부터 SensorManager 객체를 얻는다.
         m_sensor_manager = (SensorManager)ma.getSystemService(SENSOR_SERVICE);
@@ -103,10 +82,16 @@ public class Orientation implements SensorEventListener {
         m_sensor_manager.registerListener(this, m_ot_sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
+    void setPresentPosition(double x, double y)
+    {
+        my = new BuildingInfo(x,y,0);
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
 
         if(event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
+            float x,y;
                 for (int i = 0; i < 3; i++) {
                     if (isBuildingVisible(my, bi[i], event.values[0], event.values[1])) {
                         double disX = bi[i].lat - my.lat;
@@ -158,10 +143,12 @@ public class Orientation implements SensorEventListener {
                         //Log.i("half : " + (event.values[0] - hAngle), "asdasdas");
                         Log.i(i+"","번째");
 
-                        Log.i(i+"",(width - imgWidth[i]) / 2 + width * (-(degree) / viewAngle)+"");
-                        Log.i(i+"",(height - imgHeight[i]) / 2 + (-((int) (event.values[1]) + 90) / (float) 90) * (height)+"");
-                        img[i].setX((float) ((width - imgWidth[i]) / 2 + width * (-(degree) / viewAngle)));
-                        img[i].setY((height - imgHeight[i]) / 2 + (-((int) (event.values[1]) + 90) / (float) 90) * (height));
+                        Log.i(i+"",(width - cav.getImgWidth(i)) / 2 + width * (-(degree) / viewAngle)+"");
+                        Log.i(i+"",(height -  cav.getImgHeight(i)) / 2 + (-((int) (event.values[1]) + 90) / (float) 90) * (height)+"");
+                        x=(float) ((width - cav.getImgWidth(i)) / 2 + width * (-(degree) / viewAngle));
+                        y=(height - cav.getImgHeight(i)) / 2 + (-((int) (event.values[1]) + 90) / (float) 90) * (height);
+
+                        cav.setImg(i,x,y);
 //                img.setX(width*((viewAngle - (event.values[0] - hAngle)) /(viewAngle*2)) - imgWidth);
 //                img.setY(height*(-(90 + (int)event.values[1])/(viewAngle*2)) - imgHeight);
 
@@ -239,12 +226,13 @@ public class Orientation implements SensorEventListener {
         }
         double gradient = grad;
         double degree = way - hAngle;
-
+        Log.i("test","degree origin::"+degree);
         if(180 < degree)
             degree -= 360;
         else if ( degree < -180)
             degree += 360;
 
+        Log.i("test","degree::"+degree);
         if(-20 <= degree && degree <= 20 && -135 <= gradient && gradient <= -45) {
             Log.i("test","해당 위치에 건물 존재");
             return true;

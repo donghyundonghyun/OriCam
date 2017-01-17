@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.MapActivity;
 
 
 import android.graphics.Canvas;
@@ -36,7 +36,7 @@ import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
  * 
  * @author kyjkim 
  */
-public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
+public class MapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 	private static final String LOG_TAG = "NMapCalloutCustomOverlay";
 	private static final boolean DEBUG = false;
 
@@ -99,8 +99,8 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 		public Drawable[] getCalloutRightAccessory(NMapOverlayItem item);
 	}
 
-	public NMapCalloutCustomOldOverlay(NMapOverlay itemOverlay, NMapOverlayItem item, Rect itemBounds,
-									   NMapCalloutCustomOldOverlay.ResourceProvider resourceProvider) {
+	public MapCalloutCustomOldOverlay(NMapOverlay itemOverlay, NMapOverlayItem item, Rect itemBounds,
+									  MapCalloutCustomOldOverlay.ResourceProvider resourceProvider) {
 
 		super(itemOverlay, item, itemBounds);
 
@@ -292,8 +292,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 			mWidthTitleTruncated = mapViewWidth;
 			float maxWidth = mWidthTitleTruncated - 2 * mMarginX - 2 * mPaddingX;
 			if (DEBUG) {
-				Log.i(LOG_TAG, "adjustTextBounds: maxWidth=" + maxWidth + ", mMarginX=" + mMarginX + ", mPaddingX="
-					+ mPaddingX);
+				//Log.i(LOG_TAG, "adjustTextBounds: maxWidth=" + maxWidth + ", mMarginX=" + mMarginX + ", mPaddingX=" + mPaddingX);
 			}
 
 			if (mDrawableRightButton != null) {
@@ -313,8 +312,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 			mTitleTruncated = title;
 
 			if (DEBUG) {
-				Log.i(LOG_TAG, "adjustTextBounds: mTitleTruncated=" + mTitleTruncated + ", length="
-					+ mTitleTruncated.length());
+				//Log.i(LOG_TAG, "adjustTextBounds: mTitleTruncated=" + mTitleTruncated + ", length="+ mTitleTruncated.length());
 			}
 		}
 
@@ -329,8 +327,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 		}
 
 		if (DEBUG) {
-			Log.i(LOG_TAG, "adjustTextBounds: mTempRect.width=" + mTempRect.width() + ", mTempRect.height="
-				+ mTempRect.height());
+			//Log.i(LOG_TAG, "adjustTextBounds: mTempRect.width=" + mTempRect.width() + ", mTempRect.height=" + mTempRect.height());
 		}
 
 		//  Setup the callout with the right size & location

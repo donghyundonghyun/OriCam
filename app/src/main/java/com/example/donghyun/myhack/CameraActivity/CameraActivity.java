@@ -1,11 +1,15 @@
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.CameraActivity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.TextureView;
 
+import com.example.donghyun.myhack.R;
+
 public class CameraActivity extends AppCompatActivity {
+    CameraActivityView cav;
+
     private TextureView mCameraTextureView;
     private Preview mPreview;
 
@@ -20,7 +24,8 @@ public class CameraActivity extends AppCompatActivity {
         mCameraTextureView = (TextureView) findViewById(R.id.cameraTextureView);
         mPreview = new Preview(this, mCameraTextureView);
 
-        new Orientation(this);
+        cav=new CameraActivityView(this);
+        new Orientation(this,cav);
 
 
     }

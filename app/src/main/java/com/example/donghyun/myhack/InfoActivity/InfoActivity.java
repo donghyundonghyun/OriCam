@@ -1,4 +1,4 @@
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.InfoActivity;
 
 /**
  * Created by DongHyun on 2016-12-21.
@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.donghyun.myhack.R;
 
 public class InfoActivity extends AppCompatActivity {
 

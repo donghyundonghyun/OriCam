@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.MapActivity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -28,6 +28,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.example.donghyun.myhack.R;
 import com.nhn.android.maps.NMapOverlayItem;
 import com.nhn.android.maps.overlay.NMapPOIitem;
 import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
@@ -37,9 +38,9 @@ import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
  * 
  * @author kyjkim
  */
-public class NMapViewerResourceProvider extends NMapResourceProvider implements
-	NMapCalloutCustomOldOverlay.ResourceProvider {
-	private static final String LOG_TAG = "NMapViewerResourceProvider";
+public class MapViewerResourceProvider extends NMapResourceProvider implements
+	MapCalloutCustomOldOverlay.ResourceProvider {
+	private static final String LOG_TAG = "MapViewerResourceProvider";
 	private static final boolean DEBUG = false;
 
 	private static final Bitmap.Config BITMAP_CONFIG_DEFAULT = Bitmap.Config.ARGB_8888;
@@ -59,7 +60,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	private final Rect mTempRect = new Rect();
 	private final Paint mTextPaint = new Paint();
 
-	public NMapViewerResourceProvider(Context context) {
+	public MapViewerResourceProvider(Context context) {
 		super(context);
 
 		mTextPaint.setAntiAlias(true);
@@ -176,12 +177,12 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	// Resource Ids for single icons
 	private final ResourceIdsOnMap mResourceIdsForMarkerOnMap[] = {
 		// Spot, Pin icons
-		new ResourceIdsOnMap(NMapPOIflagType.PIN, R.drawable.blue_pin, R.drawable.blue_pin),
-		new ResourceIdsOnMap(NMapPOIflagType.SPOT, R.drawable.red_pin, R.drawable.red_pin),
+		new ResourceIdsOnMap(MapPOIflagType.PIN, R.drawable.blue_pin, R.drawable.blue_pin),
+		new ResourceIdsOnMap(MapPOIflagType.SPOT, R.drawable.red_pin, R.drawable.red_pin),
 
 		// Direction POI icons: From, To
-		new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
-		new ResourceIdsOnMap(NMapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
+		new ResourceIdsOnMap(MapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
+		new ResourceIdsOnMap(MapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
 	};
 
 	/**
@@ -192,26 +193,26 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	 * 	
 	 * @return resource id for the given markerId.
 	 * 
-	 * @see NMapPOIflagType
+	 * @see MapPOIflagType
 	 */
 	@Override
 	protected int findResourceIdForMarker(int markerId, boolean focused) {
 		int resourceId = 0;
 
 		if (DEBUG) {
-			Log.i(LOG_TAG, "getResourceIdForMarker: markerId=" + markerId + ", focused=" + focused);
+	//		Log.i(LOG_TAG, "getResourceIdForMarker: markerId=" + markerId + ", focused=" + focused);
 		}
 
-		if (markerId < NMapPOIflagType.SINGLE_MARKER_END) {
+		if (markerId < MapPOIflagType.SINGLE_MARKER_END) {
 			resourceId = getResourceIdOnMapView(markerId, focused, mResourceIdsForMarkerOnMap);
 			if (resourceId > 0) {
 				return resourceId;
 			}
 		}
 
-		if (markerId >= NMapPOIflagType.NUMBER_BASE && markerId < NMapPOIflagType.NUMBER_END) { // Direction Number icons
+		if (markerId >= MapPOIflagType.NUMBER_BASE && markerId < MapPOIflagType.NUMBER_END) { // Direction Number icons
 
-		} else if (markerId >= NMapPOIflagType.CUSTOM_BASE && markerId < NMapPOIflagType.CUSTOM_END) { // Custom POI icons
+		} else if (markerId >= MapPOIflagType.CUSTOM_BASE && markerId < MapPOIflagType.CUSTOM_END) { // Custom POI icons
 
 		}
 
@@ -226,7 +227,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	protected void setBounds(Drawable marker, int markerId, NMapOverlayItem item) {
 
 		// check shape of the marker to set bounds correctly.
-		if (NMapPOIflagType.isBoundsCentered(markerId)) {
+		if (MapPOIflagType.isBoundsCentered(markerId)) {
 			if (marker.getBounds().isEmpty()) {
 				NMapOverlayItem.boundCenter(marker);
 			}
@@ -312,14 +313,14 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	protected Drawable getDrawableForMarker(int markerId, boolean focused, NMapOverlayItem item) {
 		Drawable drawable = null;
 
-		if (markerId >= NMapPOIflagType.NUMBER_BASE && markerId < NMapPOIflagType.NUMBER_END) { // Direction Number icons
+		if (markerId >= MapPOIflagType.NUMBER_BASE && markerId < MapPOIflagType.NUMBER_END) { // Direction Number icons
 			int resourceId = (focused) ? R.drawable.ic_map_no_02 : R.drawable.ic_map_no_01;
 			int fontColor = (focused) ? POI_FONT_COLOR_ALPHABET : POI_FONT_COLOR_NUMBER;
 
-			String strNumber = String.valueOf(markerId - NMapPOIflagType.NUMBER_BASE);
+			String strNumber = String.valueOf(markerId - MapPOIflagType.NUMBER_BASE);
 
 			drawable = getDrawableWithNumber(resourceId, strNumber, 0.0F, fontColor, POI_FONT_SIZE_NUMBER);
-		} else if (markerId >= NMapPOIflagType.CUSTOM_BASE && markerId < NMapPOIflagType.CUSTOM_END) { // Custom POI icons
+		} else if (markerId >= MapPOIflagType.CUSTOM_BASE && markerId < MapPOIflagType.CUSTOM_END) { // Custom POI icons
 
 		}
 
@@ -424,7 +425,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 				Drawable[] drawable = new Drawable[3];
 
 				switch (poiItem.getRightAccessoryId()) {
-					case NMapPOIflagType.CLICKABLE_ARROW:
+					case MapPOIflagType.CLICKABLE_ARROW:
 						drawable[0] = mContext.getResources().getDrawable(R.drawable.pin_ballon_arrow);
 						drawable[1] = mContext.getResources().getDrawable(R.drawable.pin_ballon_on_arrow);
 						drawable[2] = mContext.getResources().getDrawable(R.drawable.pin_ballon_on_arrow);

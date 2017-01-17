@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.MapActivity;
 
 /**
  * Wrapper class representing POI flag types on map view.
  * 
  * @author kyjkim
  */
-public class NMapPOIflagType {
+public class MapPOIflagType {
 	public static final int UNKNOWN = 0x0000;
 
 	// Single POI icons
@@ -56,7 +56,7 @@ public class NMapPOIflagType {
 
 		switch (markerId) {
 			default:
-				if (markerId >= NMapPOIflagType.NUMBER_BASE && markerId < NMapPOIflagType.NUMBER_END) {
+				if (markerId >= MapPOIflagType.NUMBER_BASE && markerId < MapPOIflagType.NUMBER_END) {
 					boundsCentered = true;
 				}
 				break;

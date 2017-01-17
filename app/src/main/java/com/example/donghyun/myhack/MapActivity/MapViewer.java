@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.MapActivity;
 
 
 import android.content.Context;
@@ -29,6 +29,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.donghyun.myhack.BuildingInfo;
+import com.example.donghyun.myhack.CameraActivity.CameraActivity;
+import com.example.donghyun.myhack.R;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapCompassManager;
 import com.nhn.android.maps.NMapController;
@@ -46,11 +49,11 @@ import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
  * 
  * @author kyjkim
  */
-public class NMapViewer extends NMapActivity {
-	private static final String LOG_TAG = "NMapViewer";
+public class MapViewer extends NMapActivity {
+	private static final String LOG_TAG = "MapViewer";
 	private static final boolean DEBUG = false;
 
-	// set your Client ID which is registered for NMapViewer library.
+	// set your Client ID which is registered for MapViewer library.
 	private static final String CLIENT_ID = "5QlbWErrgs5Cl4XOuQyG";
 
 	private MapContainerView mMapContainerView;
@@ -64,7 +67,7 @@ public class NMapViewer extends NMapActivity {
 	private NMapLocationManager mMapLocationManager;
 	private NMapCompassManager mMapCompassManager;
 
-	private NMapViewerResourceProvider mMapViewerResourceProvider;
+	private MapViewerResourceProvider mMapViewerResourceProvider;
 
     public NMapPOIdata poiData;
 
@@ -138,7 +141,7 @@ public class NMapViewer extends NMapActivity {
 		mMapView.setBuiltInZoomControls(true, lp);*/
 
 		// create resource provider
-		mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
+		mMapViewerResourceProvider = new MapViewerResourceProvider(this);
 
 		// set data provider listener
 		//super.setMapDataProviderListener(onDataProviderListener);
@@ -193,7 +196,7 @@ public class NMapViewer extends NMapActivity {
                 } else {
                     boolean isMyLocationEnabled = mMapLocationManager.enableMyLocation(true);
                     if (!isMyLocationEnabled) {
-                        Toast.makeText(NMapViewer.this, "Please enable a My Location source in system settings",
+                        Toast.makeText(MapViewer.this, "Please enable a My Location source in system settings",
                                 Toast.LENGTH_LONG).show();
 
                         Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -223,13 +226,13 @@ public class NMapViewer extends NMapActivity {
 		@Override
 		public void onLocationUpdateTimeout(NMapLocationManager locationManager) {
 
-			Toast.makeText(NMapViewer.this, "Your current location is temporarily unavailable.", Toast.LENGTH_LONG).show();
+			Toast.makeText(MapViewer.this, "Your current location is temporarily unavailable.", Toast.LENGTH_LONG).show();
 		}
 
 		@Override
 		public void onLocationUnavailableArea(NMapLocationManager locationManager, NGeoPoint myLocation) {
 
-			Toast.makeText(NMapViewer.this, "Your current location is unavailable area.", Toast.LENGTH_LONG).show();
+			Toast.makeText(MapViewer.this, "Your current location is unavailable area.", Toast.LENGTH_LONG).show();
 
 		}
 
@@ -254,7 +257,7 @@ public class NMapViewer extends NMapActivity {
             } else { // fail
 				Log.e(LOG_TAG, "onFailedToInitializeWithError: " + errorInfo.toString());
 
-				Toast.makeText(NMapViewer.this, errorInfo.toString(), Toast.LENGTH_LONG).show();
+				Toast.makeText(MapViewer.this, errorInfo.toString(), Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -371,19 +374,19 @@ public class NMapViewer extends NMapActivity {
             poiData.beginPOIdata(3);
 
             if(NGeoPoint.getDistance(result, new NGeoPoint(127.073673, 37.549022)) < 200.0) {
-                poiData.addPOIitem(BuildingInfo.LON0, BuildingInfo.LAT0, null, NMapPOIflagType.PIN, 0); //학생회관
+                poiData.addPOIitem(BuildingInfo.LON0, BuildingInfo.LAT0, null, MapPOIflagType.PIN, 0); //학생회관
             }else{
-                poiData.addPOIitem(BuildingInfo.LON0, BuildingInfo.LAT0, null, NMapPOIflagType.SPOT, 0); //학생회관
+                poiData.addPOIitem(BuildingInfo.LON0, BuildingInfo.LAT0, null, MapPOIflagType.SPOT, 0); //학생회관
             }
             if(NGeoPoint.getDistance(result, new NGeoPoint(127.073521, 37.549161)) < 200.0) {
-                poiData.addPOIitem(BuildingInfo.LON1, BuildingInfo.LAT1, null, NMapPOIflagType.PIN, 1); //광개토
+                poiData.addPOIitem(BuildingInfo.LON1, BuildingInfo.LAT1, null, MapPOIflagType.PIN, 1); //광개토
             }else{
-                poiData.addPOIitem(BuildingInfo.LON1, BuildingInfo.LAT1, null, NMapPOIflagType.SPOT, 1); //광개토
+                poiData.addPOIitem(BuildingInfo.LON1, BuildingInfo.LAT1, null, MapPOIflagType.SPOT, 1); //광개토
             }
             if(NGeoPoint.getDistance(result, new NGeoPoint(127.073952, 37.552261)) < 10.0){
-                poiData.addPOIitem(BuildingInfo.LON2, BuildingInfo.LAT2, null, NMapPOIflagType.PIN, 2); //충무관
+                poiData.addPOIitem(BuildingInfo.LON2, BuildingInfo.LAT2, null, MapPOIflagType.PIN, 2); //충무관
             }else{
-                poiData.addPOIitem(BuildingInfo.LON2, BuildingInfo.LAT2, null, NMapPOIflagType.SPOT, 2); //충무관
+                poiData.addPOIitem(BuildingInfo.LON2, BuildingInfo.LAT2, null, MapPOIflagType.SPOT, 2); //충무관
             }
             poiData.endPOIdata();
             NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
