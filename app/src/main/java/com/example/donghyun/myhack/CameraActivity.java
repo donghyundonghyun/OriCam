@@ -5,9 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.TextureView;
 
+import java.util.ArrayList;
+
 public class CameraActivity extends AppCompatActivity {
     private TextureView mCameraTextureView;
     private Preview mPreview;
+
+    private ArrayList<OriInfo> ories;
 
     DisplayMetrics dm;
 
@@ -15,12 +19,15 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        ories = getIntent().getParcelableArrayListExtra("ories");
+
+
         dm = getApplicationContext().getResources().getDisplayMetrics();
 
         mCameraTextureView = (TextureView) findViewById(R.id.cameraTextureView);
         mPreview = new Preview(this, mCameraTextureView);
 
-        new Orientation(this);
+        new Orientation(this, ories);
 
 
     }
