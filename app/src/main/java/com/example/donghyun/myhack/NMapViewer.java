@@ -261,8 +261,9 @@ public class NMapViewer extends NMapActivity {
 //				restoreInstanceState();
 				startMyLocation();
 
-				//세종대 중심
+
 				mMapController.setMapCenter(new NGeoPoint(127.073890,37.550583), 19);
+//				mMapController.setMapCenter(new NGeoPoint(127.044804,37.468642), 19);
 
                 getdata();
 				new MyAsyncTask(poiData).execute(mMapLocationManager);

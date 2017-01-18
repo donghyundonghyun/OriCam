@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -51,7 +50,7 @@ public class Orientation implements SensorEventListener {
         cameraActivity =ma;
         gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext());
 
-        my = new BuildingInfo(gpsinfo.getLongitude(),gpsinfo.getLatitude(),0);
+        my = new BuildingInfo(gpsinfo.getLatitude(), gpsinfo.getLongitude(),0);
 
         imgWidth = new float[ories.size()];
         imgHeight = new float[ories.size()];
@@ -67,7 +66,6 @@ public class Orientation implements SensorEventListener {
 
         width = ma.dm.widthPixels;
         height = ma.dm.heightPixels;
-
 
         img[2] = (ImageView)ma.findViewById(R.id.duck2); //광개토
         img[1] = (ImageView)ma.findViewById(R.id.duck1); //충무관
@@ -95,8 +93,8 @@ public class Orientation implements SensorEventListener {
 
         }
 
-        img[0].getLayoutParams().width = 200;
-        img[0].getLayoutParams().height = 200;
+        img[0].getLayoutParams().width = 500;
+        img[0].getLayoutParams().height = 500;
 
         // 시스템서비스로부터 SensorManager 객체를 얻는다.
         m_sensor_manager = (SensorManager)ma.getSystemService(SENSOR_SERVICE);
@@ -109,65 +107,32 @@ public class Orientation implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
+        double myWay, grad, bearing;
+
         if(event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
                 for (int i = 0; i < 3; i++) {
-                    if (isBuildingVisible(my, bi[i], event.values[0], event.values[1])) {
-                        double disX = bi[i].lat - my.lat;
-                        double disY = bi[i].lon - my.lon;
 
-                        double offset,hAngle;
-                        if(disX<0)
-                        {
-                            disX=-disX;
-                            if(disY<0)
-                            {
-                                disY=-disY;
-                                offset = Math.atan(disY/disX)*180/ Math.PI;
-                                hAngle= 270 -offset;
-                            }
-                            else
-                            {
-                                offset = Math.atan(disY/disX)*180/ Math.PI;
-                                hAngle= 270 +offset;
-                            }
-                        }
-                        else
-                        {
-                            if(disY<0)
-                            {
-                                disY=-disY;
-                                offset = Math.atan(disY/disX)*180/ Math.PI;
-                                hAngle= 90 +offset;
-                            }
-                            else
-                            {
-                                offset = Math.atan(disY/disX)*180/ Math.PI;
-                                hAngle= 90 - offset;
-                            }
-                        }
+                    bearing = bearingP1toP2(my, bi[i]);
 
+                    myWay = event.values[0];        //방위
+                    grad = event.values[1];     //경사도
 
-                        double degree = event.values[0] - hAngle;
+                    if(bearing > 180)
+                        bearing -= 360;
 
-                        if (180 < degree)
-                            degree -= 360;
-                        else if (degree < -180)
-                            degree += 360;
+                    if(myWay > 180)
+                        myWay -= 360;
+
+                    if (isBuildingVisible(bearing, myWay, grad)) {
 
                         img[i].setVisibility(View.VISIBLE);
-                        //Log.i("hAngle : " + ((int) event.values[0] - hAngle) + viewAngle, "기울기 : " + (int) event.values[1]);
-                        //Log.i("값 : ", " " + width * ((viewAngle - (degree)) / (viewAngle * 2)));
-                        //Log.i("event[0] : " + event.values[0], "hAngle : " + hAngle);
-                        //Log.i("half : " + (event.values[0] - hAngle), "asdasdas");
-                        Log.i(i+"","번째");
-
-                        Log.i(i+"",(width - imgWidth[i]) / 2 + width * (-(degree) / viewAngle)+"");
-                        Log.i(i+"",(height - imgHeight[i]) / 2 + (-((int) (event.values[1]) + 90) / (float) 90) * (height)+"");
-                        img[i].setX((float) ((width - imgWidth[i]) / 2 + width * (-(degree) / viewAngle)));
-                        img[i].setY((height - imgHeight[i]) / 2 + (-((int) (event.values[1]) + 90) / (float) 90) * (height));
-//                img.setX(width*((viewAngle - (event.values[0] - hAngle)) /(viewAngle*2)) - imgWidth);
-//                img.setY(height*(-(90 + (int)event.values[1])/(viewAngle*2)) - imgHeight);
-
+/*
+                        Log.i(i + "", "번째");
+                        Log.i("내 위도 : " + my.lat, " 내 경도 : " + my.lon);
+                        Log.i("건물 위도 : " + bi[i].lat, "건물 경도 : " + bi[i].lon);
+*/
+                        img[i].setX((float)((width - imgWidth[i]) / 2 + ((width / 2.0) * ((bearing - myWay) / viewAngle - 5))));
+                        img[i].setY((float)((height - imgHeight[i]) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0)));
                     }
                 }
 
@@ -205,53 +170,45 @@ public class Orientation implements SensorEventListener {
         super.finalize();
     }
 
-    public boolean isBuildingVisible(BuildingInfo myPos, BuildingInfo buildingPos, float way, float grad)
+    public double radian2degree(double _num)
     {
-        double disX = buildingPos.lat - my.lat;
-        double disY = buildingPos.lon - my.lon;
+        return _num * 180.0 / Math.PI;
+    }
 
-        double offset,hAngle;
-        if(disX<0)
-        {
-            disX=-disX;
-            if(disY<0)
-            {
-                disY=-disY;
-                offset = Math.atan(disY/disX)*180/ Math.PI;
-                hAngle= 270 -offset;
-            }
-            else
-            {
-                offset = Math.atan(disY/disX)*180/ Math.PI;
-                hAngle= 270 +offset;
-            }
-        }
-        else
-        {
-            if(disY<0)
-            {
-                disY=-disY;
-                offset = Math.atan(disY/disX)*180/ Math.PI;
-                hAngle= 90 +offset;
-            }
-            else
-            {
-                offset = Math.atan(disY/disX)*180/ Math.PI;
-                hAngle= 90 - offset;
-            }
-        }
-        double gradient = grad;
-        double degree = way - hAngle;
+    public double degree2radian(double _num)
+    {
+        return _num * Math.PI / 180.0;
+    }
 
-        if(180 < degree)
-            degree -= 360;
-        else if ( degree < -180)
-            degree += 360;
+    public double bearingP1toP2(BuildingInfo myLoc, BuildingInfo dest)
+    {
+        //위도나 경도는 지구 중심을 기반으로 하는 각도이기 때문에 라디안 각도로 변환
+        double my_lat_radian = degree2radian(myLoc.lat);
+        double my_lon_radian = degree2radian(myLoc.lon);
 
-        if(-20 <= degree && degree <= 20 && -135 <= gradient && gradient <= -45) {
-            Log.i("test","해당 위치에 건물 존재");
+        double dest_lat_radian = degree2radian(dest.lat);
+        double dest_lon_radian = degree2radian(dest.lon);
+
+        double radian_distance = Math.acos(Math.sin(my_lat_radian) * Math.sin(dest_lat_radian)
+                + Math.cos(my_lat_radian) * Math.cos(dest_lat_radian) * Math.cos(my_lon_radian - dest_lon_radian));
+
+        //목적지 방향 구함
+        double radian_bearing = Math.acos((Math.sin(dest_lat_radian) - Math.sin(my_lat_radian) * Math.cos(radian_distance))
+            / (Math.cos(my_lat_radian) * Math.sin(radian_distance)));
+
+        double true_bearing = radian2degree(radian_bearing);
+
+
+        if(Math.sin(dest_lon_radian - my_lon_radian) < 0)
+            true_bearing = 360 - true_bearing;
+
+        return true_bearing;
+    }
+
+    public boolean isBuildingVisible(double bearing, double myWay, double grad)
+    {
+        if(bearing - viewAngle <= myWay && myWay <= bearing + viewAngle && -135 <= grad && grad <= -45)
             return true;
-        }
         else
             return false;
     }
