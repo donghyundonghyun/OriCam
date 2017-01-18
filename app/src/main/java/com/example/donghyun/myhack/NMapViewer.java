@@ -16,10 +16,12 @@
 package com.example.donghyun.myhack;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapCompassManager;
 import com.nhn.android.maps.NMapController;
@@ -40,6 +43,14 @@ import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Sample class for map viewer library.
@@ -68,7 +79,10 @@ public class NMapViewer extends NMapActivity {
 
     public NMapPOIdata poiData;
 
-    private boolean flag = false;
+	ApplicationController applicationController;
+	NetworkService networkService;
+	List<OriInfo> ories;
+
 
 
 	/** Called when the activity is first created. */
@@ -89,6 +103,7 @@ public class NMapViewer extends NMapActivity {
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+				intent.putParcelableArrayListExtra("ories", (ArrayList<? extends Parcelable>) ories);
 				startActivity(intent);
 			}
 		});
@@ -247,12 +262,11 @@ public class NMapViewer extends NMapActivity {
 				startMyLocation();
 
 
-				//처음 보이는 지도 위치
 				mMapController.setMapCenter(new NGeoPoint(127.073890,37.550583), 19);
 //				mMapController.setMapCenter(new NGeoPoint(127.044804,37.468642), 19);
 
-                new MyAsyncTask(poiData).execute(mMapLocationManager);
-
+                getdata();
+				new MyAsyncTask(poiData).execute(mMapLocationManager);
 
             } else { // fail
 				Log.e(LOG_TAG, "onFailedToInitializeWithError: " + errorInfo.toString());
@@ -346,54 +360,90 @@ public class NMapViewer extends NMapActivity {
 
 
 
-    public class MyAsyncTask extends AsyncTask<NMapLocationManager, Void, NGeoPoint> {
-        NMapPOIdata poiData;
+	public void getdata(){
+		applicationController = ApplicationController.getInstance();
+		applicationController.buildNetworkService("35.166.255.30", 80);
+		networkService = applicationController.getNetworkService();
 
-        public MyAsyncTask(NMapPOIdata poiData){
-            this.poiData = poiData;
-        }
+		//final ProgressDialog dialog = ProgressDialog.show(this,"","현재위치를 찾고 있습니다.",true);
 
-        @Override
-        protected NGeoPoint doInBackground(NMapLocationManager... params) {
-            NGeoPoint cur;
+		Call<List<OriInfo>> DetailCall = networkService.getOries();
+		DetailCall.enqueue(new Callback<List<OriInfo>>() {
+			@Override
+			public void onResponse(Response<List<OriInfo>> response, Retrofit retrofit) {
+				if (response.isSuccess()) {
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(response.body());
+					Log.i("MyTaggggggggg", jsonString);
 
-            while((cur = params[0].getMyLocation()) == null);
+					ories = response.body();
 
-            return cur;
-        }
-
-        @Override
-        protected void onPostExecute(NGeoPoint result) {
-            super.onPostExecute(result);
-
-            Log.i("ttttttttttt",NGeoPoint.getDistance(result, new NGeoPoint(127.073673, 37.549022))+"");
-
-
-            poiData = new NMapPOIdata(3, mMapViewerResourceProvider);
-
-            poiData.beginPOIdata(3);
-
-            if(NGeoPoint.getDistance(result, new NGeoPoint(127.073673, 37.549022)) < 200.0) {
-                poiData.addPOIitem(BuildingInfo.LON0, BuildingInfo.LAT0, null, NMapPOIflagType.PIN, 0); //학생회관
-            }else{
-                poiData.addPOIitem(BuildingInfo.LON0, BuildingInfo.LAT0, null, NMapPOIflagType.SPOT, 0); //학생회관
-            }
-            if(NGeoPoint.getDistance(result, new NGeoPoint(127.073521, 37.549161)) < 200.0) {
-                poiData.addPOIitem(BuildingInfo.LON1, BuildingInfo.LAT1, null, NMapPOIflagType.PIN, 1); //광개토
-            }else{
-                poiData.addPOIitem(BuildingInfo.LON1, BuildingInfo.LAT1, null, NMapPOIflagType.SPOT, 1); //광개토
-            }
-            if(NGeoPoint.getDistance(result, new NGeoPoint(127.073952, 37.552261)) < 10.0){
-                poiData.addPOIitem(BuildingInfo.LON2, BuildingInfo.LAT2, null, NMapPOIflagType.PIN, 2); //충무관
-            }else{
-                poiData.addPOIitem(BuildingInfo.LON2, BuildingInfo.LAT2, null, NMapPOIflagType.SPOT, 2); //충무관
-            }
-            poiData.endPOIdata();
-            NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
-        }
+				} else {
+					int statusCode = response.code();
+					Log.i("MyTag", "에러 상태 코드 : " + statusCode);
+				}
+			}
+			@Override
+			public void onFailure(Throwable t) {
+				Log.i("MyTag", t.getMessage());
+			}
+		});
+	}
 
 
-    }
+
+	public class MyAsyncTask extends AsyncTask<NMapLocationManager, Void, NGeoPoint> {
+		NMapPOIdata poiData;
+		ProgressDialog dialog;
+
+		public MyAsyncTask(NMapPOIdata poiData){
+			this.poiData = poiData;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			dialog = ProgressDialog.show(NMapViewer.this,"","현재위치를 찾고 있습니다.",true);
+			super.onPreExecute();
+		}
+
+		@Override
+		protected NGeoPoint doInBackground(NMapLocationManager... params) {
+			NGeoPoint cur;
+			while((cur = params[0].getMyLocation()) == null);
+
+			return cur;
+		}
+
+		@Override
+		protected void onPostExecute(NGeoPoint result) {
+			super.onPostExecute(result);
+			if(dialog.isShowing())
+				dialog.dismiss();
+
+			Log.i("현재위치",result.toString());			//		   127.0742002, 37.5522443
+			Log.i("충무관",NGeoPoint.getDistance(result, new NGeoPoint(127.0739520, 37.5522610))+"");
+			Log.i("광개토관",NGeoPoint.getDistance(result, new NGeoPoint(127.0731520, 37.5502760))+"");
+			Log.i("학생회관",NGeoPoint.getDistance(result, new NGeoPoint(127.0752010, 37.5494410))+"");
+
+			poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
+
+			poiData.beginPOIdata(ories.size());
+
+			for(int i=0;i<ories.size();i++){
+				if(NGeoPoint.getDistance(result, new NGeoPoint(ories.get(i).lon, ories.get(i).lat)) < 300.0) { // 미터단위
+					poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.PIN, 0); //파랑
+				}else{
+					poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.SPOT, 0); //빨강
+				}
+			}
+			poiData.endPOIdata();
+			NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
+		}
+
+
+	}
+
+
 
 }
 

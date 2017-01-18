@@ -7,7 +7,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -19,13 +20,13 @@ import static android.content.Context.SENSOR_SERVICE;
 //public class Orientation extends Thread implements SensorEventListener {
 public class Orientation implements SensorEventListener {
     //TextView[] tv;
-    SensorManager m_sensor_manager;
-    Sensor m_ot_sensor;
-    CameraActivity cameraActivity;
+    private SensorManager m_sensor_manager;
+    private Sensor m_ot_sensor;
+    private CameraActivity cameraActivity;
 
-    ImageView[] img = new ImageView[3];
+    private ImageView[] img;
 
-    Gpsinfo gpsinfo;
+    private Gpsinfo gpsinfo;
 
     BuildingInfo[] bi;
     BuildingInfo my;
@@ -39,23 +40,29 @@ public class Orientation implements SensorEventListener {
     float[] imgWidth = new float[3];
     float[] imgHeight = new float[3];
 
+    ArrayList<OriInfo> ories;
 
-    public Orientation(CameraActivity ma)
+
+    public Orientation(CameraActivity ma, ArrayList<OriInfo> ories)
     {
+        this.ories = ories;
+
         cameraActivity =ma;
         gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext());
 
         my = new BuildingInfo(gpsinfo.getLatitude(), gpsinfo.getLongitude(),0);
 
-        bi = new BuildingInfo[3];
-/*
-        bi[2] = new BuildingInfo(127.075201, 37.549441, 0);//학생회관 37.549441, 127.075201 ->충무
+        imgWidth = new float[ories.size()];
+        imgHeight = new float[ories.size()];
+        bi = new BuildingInfo[ories.size()];
+        img = new ImageView[ories.size()];
+
+        for(int i=0;i<ories.size();i++){
+            bi[i] = new BuildingInfo(ories.get(i).lon, ories.get(i).lat, 0);
+        }
+        /*bi[2] = new BuildingInfo(127.075201, 37.549441, 0);//학생회관 37.549441, 127.075201 ->충무
         bi[1] = new BuildingInfo(127.073152, 37.550276, 0);//광개토 37.550276, 127.073152 ->
-        bi[0] = new BuildingInfo(127.073952, 37.552261,0);//충무관 ->학생
-*/
-        bi[0] = new BuildingInfo(37.472559, 127.04298, 0);      //언남고
-        bi[1] = new BuildingInfo(37.46808, 127.038968, 0);      //AT센터
-        bi[2] = new BuildingInfo(37.47588, 127.052701, 0);      //포이초
+        bi[0] = new BuildingInfo(127.073952, 37.552261,0);//충무관 ->학생*/
 
         width = ma.dm.widthPixels;
         height = ma.dm.heightPixels;
@@ -78,13 +85,9 @@ public class Orientation implements SensorEventListener {
             img[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(finali==0)
-                        Toast.makeText(cameraActivity.getApplicationContext(),"더 가까이 가서 선택해주세요",Toast.LENGTH_SHORT).show();
-                    else{
-                        Intent intent = new Intent(cameraActivity.getApplicationContext(), InfoActivity.class);
-                        intent.putExtra("index", finali);
-                        cameraActivity.startActivity(intent);
-                    }
+                    Intent intent = new Intent(cameraActivity.getApplicationContext(), InfoActivity.class);
+                    intent.putExtra("index", finali);
+                    cameraActivity.startActivity(intent);
                 }
             });
 
