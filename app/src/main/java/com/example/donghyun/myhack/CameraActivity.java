@@ -10,6 +10,9 @@ import java.util.ArrayList;
 public class CameraActivity extends AppCompatActivity {
     private TextureView mCameraTextureView;
     private Preview mPreview;
+    private PastPreview pPreview;
+    int version;
+
 
     private ArrayList<OriInfo> ories;
 
@@ -21,11 +24,17 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         ories = getIntent().getParcelableArrayListExtra("ories");
 
+        version= android.os.Build.VERSION.SDK_INT;
+
+
 
         dm = getApplicationContext().getResources().getDisplayMetrics();
 
         mCameraTextureView = (TextureView) findViewById(R.id.cameraTextureView);
-        mPreview = new Preview(this, mCameraTextureView);
+        //mPreview = new Preview(this, mCameraTextureView);
+
+        if(version<21)pPreview=new PastPreview(this, mCameraTextureView);
+        else mPreview = new Preview(this, mCameraTextureView);
 
         new Orientation(this, ories);
 
@@ -35,12 +44,24 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mPreview.onResume();
+        PreviewOnResume(version);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mPreview.onPause();
+        PreviewOnPause(version);
+    }
+
+    protected void PreviewOnResume(int ver)
+    {
+        if(version<21)pPreview.onResume();
+        else mPreview.onResume();
+    }
+
+    protected void PreviewOnPause(int ver)
+    {
+        if(version<21)pPreview.onPause();
+        else mPreview.onPause();
     }
 }
