@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.MapActivity;
 
 
 import android.app.ProgressDialog;
@@ -31,6 +31,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.donghyun.myhack.ApplicationController;
+import com.example.donghyun.myhack.CameraActivity.CameraActivity;
+import com.example.donghyun.myhack.NetworkService;
+import com.example.donghyun.myhack.OriInfo;
+import com.example.donghyun.myhack.R;
 import com.google.gson.Gson;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapCompassManager;

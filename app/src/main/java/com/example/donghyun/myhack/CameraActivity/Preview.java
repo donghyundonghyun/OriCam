@@ -1,4 +1,4 @@
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.CameraActivity;
 
 import android.annotation.TargetApi;
 import android.content.Context;

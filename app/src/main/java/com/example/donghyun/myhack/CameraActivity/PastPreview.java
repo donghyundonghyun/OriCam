@@ -1,4 +1,4 @@
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.CameraActivity;
 
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
