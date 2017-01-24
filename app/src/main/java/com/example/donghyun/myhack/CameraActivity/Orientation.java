@@ -1,12 +1,19 @@
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.CameraActivity;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.example.donghyun.myhack.BuildingInfo;
+import com.example.donghyun.myhack.Gpsinfo;
+import com.example.donghyun.myhack.InfoActivity;
+import com.example.donghyun.myhack.OriInfo;
+import com.example.donghyun.myhack.R;
 
 import java.util.ArrayList;
 
@@ -40,6 +47,8 @@ public class Orientation implements SensorEventListener {
     float[] imgWidth = new float[3];
     float[] imgHeight = new float[3];
 
+    double myWay, grad, bearing;
+
     ArrayList<OriInfo> ories;
 
 
@@ -67,6 +76,7 @@ public class Orientation implements SensorEventListener {
         width = ma.dm.widthPixels;
         height = ma.dm.heightPixels;
 
+        /*
         img[2] = (ImageView)ma.findViewById(R.id.duck2); //광개토
         img[1] = (ImageView)ma.findViewById(R.id.duck1); //충무관
         img[0] = (ImageView)ma.findViewById(R.id.duck3); //학생
@@ -93,9 +103,11 @@ public class Orientation implements SensorEventListener {
 
         }
 
-        img[0].getLayoutParams().width = 500;
-        img[0].getLayoutParams().height = 500;
 
+        img[0].getLayoutParams().width = 500;
+        img[0].getLayoutParams().height = 500
+        ;
+        */
         // 시스템서비스로부터 SensorManager 객체를 얻는다.
         m_sensor_manager = (SensorManager)ma.getSystemService(SENSOR_SERVICE);
         // SensorManager 를 이용해서 방향 센서 객체를 얻는다.
@@ -107,34 +119,17 @@ public class Orientation implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        double myWay, grad, bearing;
 
-        if(event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-                for (int i = 0; i < 3; i++) {
+        if(event.sensor.getType() == Sensor.TYPE_ORIENTATION)
+        {
+            myWay = event.values[0];        //방위
+            grad = event.values[1];     //경사도
 
-                    bearing = bearingP1toP2(my, bi[i]);
-
-                    myWay = event.values[0];        //방위
-                    grad = event.values[1];     //경사도
-
-                    if(bearing > 180)
-                        bearing -= 360;
-
-                    if(myWay > 180)
-                        myWay -= 360;
-
-                    if (isBuildingVisible(bearing, myWay, grad)) {
-
-                        img[i].setVisibility(View.VISIBLE);
-/*
-                        Log.i(i + "", "번째");
-                        Log.i("내 위도 : " + my.lat, " 내 경도 : " + my.lon);
-                        Log.i("건물 위도 : " + bi[i].lat, "건물 경도 : " + bi[i].lon);
-*/
-                        img[i].setX((float)((width - imgWidth[i]) / 2 + ((width / 2.0) * ((bearing - myWay) / viewAngle - 5))));
-                        img[i].setY((float)((height - imgHeight[i]) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0)));
-                    }
-                }
+            if(myWay > 180)myWay -= 360;
+            cameraActivity.updateByOrientaion();
+                       //img[i].setX((float)((width - imgWidth[i]) / 2 + ((width / 2.0) * ((bearing - myWay) / viewAngle - 5))));
+                       //img[i].setY((float)((height - imgHeight[i]) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0)))
+        }
 
           /*  String str;
             // 첫번째 데이터인 방위값으로 문자열을 구성하여 텍스트뷰에 출력한다.
@@ -155,6 +150,29 @@ public class Orientation implements SensorEventListener {
             str = "호출 횟수 : " + m_check_count + " 회";
             m_check_view.setText(str);
             */
+
+    }
+
+    public BuildingInfo getMakerPoint(OriInfo oriinfo,int iw,int ih)
+    {
+        BuildingInfo tbi =  new BuildingInfo(oriinfo.lon,oriinfo.lat,0);
+        bearing = bearingP1toP2(my, tbi);
+
+        if(bearing > 180)
+            bearing -= 360;
+
+        if (isBuildingVisible(bearing, myWay, grad)) {
+            double x,y;
+
+            x=((width - iw) / 2 + ((width / 2.0) * ((bearing - myWay) / viewAngle - 5)));
+            y=((height - ih) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0));
+
+            return  new BuildingInfo(x,y,1);
+        }
+
+        else
+        {
+            return new BuildingInfo(0,0,-1);
         }
     }
 

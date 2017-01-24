@@ -28,9 +28,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NMapViewer"
+            android:name=".MapActivity.NMapViewer"
             android:configChanges="keyboardHidden|orientation"></activity>
-        <activity android:name=".CameraActivity"></activity>
+        <activity android:name=".CameraActivity.CameraActivity"></activity>
 
         <activity android:name=".InfoActivity"/>
     </application>

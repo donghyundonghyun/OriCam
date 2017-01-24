@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.donghyun.myhack.MapActivity.NMapViewer;
+
 /**
  * Created by DongHyun on 2016-12-20.
  */

@@ -1,14 +1,20 @@
-package com.example.donghyun.myhack;
+package com.example.donghyun.myhack.CameraActivity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.TextureView;
 
+import com.example.donghyun.myhack.OriInfo;
+import com.example.donghyun.myhack.R;
+
 import java.util.ArrayList;
 
 public class CameraActivity extends AppCompatActivity {
-    private TextureView mCameraTextureView;
+    private Orientation ot;
+    private TextureView mCameraTextureView; // ddd
+    CameraActivityView cav;
+    CameraActivityUpdater cau;
     private Preview mPreview;
     private PastPreview pPreview;
     int version;
@@ -22,12 +28,10 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        ories = getIntent().getParcelableArrayListExtra("ories");
+
+        ories = getIntent().getParcelableArrayListExtra("ories"); //수정필요
 
         version= android.os.Build.VERSION.SDK_INT;
-
-
-
         dm = getApplicationContext().getResources().getDisplayMetrics();
 
         mCameraTextureView = (TextureView) findViewById(R.id.cameraTextureView);
@@ -36,9 +40,10 @@ public class CameraActivity extends AppCompatActivity {
         if(version<21)pPreview=new PastPreview(this, mCameraTextureView);
         else mPreview = new Preview(this, mCameraTextureView);
 
-        new Orientation(this, ories);
+        ot=new Orientation(this, ories);
+        cav = new CameraActivityView(this,ories,ot);
 
-
+        cau =new CameraActivityUpdater(cav);
     }
 
     @Override
@@ -51,6 +56,16 @@ public class CameraActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         PreviewOnPause(version);
+    }
+
+    protected void updateByGPS()
+    {
+
+    }
+
+    protected  void updateByOrientaion()
+    {
+        cau.updateViewByOrientaion();
     }
 
     protected void PreviewOnResume(int ver)
