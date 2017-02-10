@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -27,6 +28,8 @@ import static android.content.Context.SENSOR_SERVICE;
 //public class Orientation extends Thread implements SensorEventListener {
 public class Orientation implements SensorEventListener {
     //TextView[] tv;
+
+    boolean flag;
     private SensorManager m_sensor_manager;
     private Sensor m_ot_sensor;
     private CameraActivity cameraActivity;
@@ -56,6 +59,8 @@ public class Orientation implements SensorEventListener {
     {
         this.ories = ories;
 
+        flag=true;
+
         cameraActivity =ma;
         gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext());
 
@@ -69,45 +74,11 @@ public class Orientation implements SensorEventListener {
         for(int i=0;i<ories.size();i++){
             bi[i] = new BuildingInfo(ories.get(i).lon, ories.get(i).lat, 0);
         }
-        /*bi[2] = new BuildingInfo(127.075201, 37.549441, 0);//학생회관 37.549441, 127.075201 ->충무
-        bi[1] = new BuildingInfo(127.073152, 37.550276, 0);//광개토 37.550276, 127.073152 ->
-        bi[0] = new BuildingInfo(127.073952, 37.552261,0);//충무관 ->학생*/
 
         width = ma.dm.widthPixels;
         height = ma.dm.heightPixels;
 
-        /*
-        img[2] = (ImageView)ma.findViewById(R.id.duck2); //광개토
-        img[1] = (ImageView)ma.findViewById(R.id.duck1); //충무관
-        img[0] = (ImageView)ma.findViewById(R.id.duck3); //학생
 
-        for(int i=0;i<3;i++) {
-            img[i].getLayoutParams().width = 500;
-            img[i].getLayoutParams().height = 500;
-
-            imgWidth[i]=(float) img[i].getLayoutParams().width;
-            imgHeight[i]=(float) img[i].getLayoutParams().height;
-
-
-            //Log.i("값 비교 -----> " + img.getX()+"",img.getY()+" : " + imgHeight + " : " + img.getHeight());
-            final int finali = i;
-
-            img[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(cameraActivity.getApplicationContext(), InfoActivity.class);
-                    intent.putExtra("index", finali);
-                    cameraActivity.startActivity(intent);
-                }
-            });
-
-        }
-
-
-        img[0].getLayoutParams().width = 500;
-        img[0].getLayoutParams().height = 500
-        ;
-        */
         // 시스템서비스로부터 SensorManager 객체를 얻는다.
         m_sensor_manager = (SensorManager)ma.getSystemService(SENSOR_SERVICE);
         // SensorManager 를 이용해서 방향 센서 객체를 얻는다.
@@ -116,11 +87,20 @@ public class Orientation implements SensorEventListener {
         m_sensor_manager.registerListener(this, m_ot_sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
+    public void onPause()
+    {
+        flag=false;
+    }
+    public void onResume()
+    {
+        flag=true;
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
 
 
-        if(event.sensor.getType() == Sensor.TYPE_ORIENTATION)
+        if(event.sensor.getType() == Sensor.TYPE_ORIENTATION&&flag==true)
         {
             myWay = event.values[0];        //방위
             grad = event.values[1];     //경사도
@@ -131,25 +111,7 @@ public class Orientation implements SensorEventListener {
                        //img[i].setY((float)((height - imgHeight[i]) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0)))
         }
 
-          /*  String str;
-            // 첫번째 데이터인 방위값으로 문자열을 구성하여 텍스트뷰에 출력한다.
-            str = "azimuth(z) : " + (int) event.values[0];
-            tv[0].setText(str);
 
-            // 두번째 데이터인 경사도로 문자열을 구성하여 텍스트뷰에 출력한다.
-            str = "pitch(x) : " + (int) event.values[1];
-            tv[1].setText(str);
-
-            // 세번째 데이터인 좌우 회전값으로 문자열을 구성하여 텍스트뷰에 출력한다.
-            str = "roll(y) : " + (int) event.values[2];
-            tv[2].setText(str);
-*/
-            /*
-            // 함수의 출력횟수를 텍스트뷰에 출력한다.
-            m_check_count++;
-            str = "호출 횟수 : " + m_check_count + " 회";
-            m_check_view.setText(str);
-            */
 
     }
 
@@ -158,13 +120,14 @@ public class Orientation implements SensorEventListener {
         BuildingInfo tbi =  new BuildingInfo(oriinfo.lon,oriinfo.lat,0);
         bearing = bearingP1toP2(my, tbi);
 
-        if(bearing > 180)
-            bearing -= 360;
+        Log.i(oriinfo.name+":",""+myWay);
+        if(bearing > 180)bearing -= 360;
+        else if(bearing<-180) bearing +=360;
 
         if (isBuildingVisible(bearing, myWay, grad)) {
             double x,y;
 
-            x=((width - iw) / 2 + ((width / 2.0) * ((bearing - myWay) / viewAngle - 5)));
+            x=((width - iw) / 2 + ((width / 2.0) * ((bearing - myWay) / (viewAngle - 5))));
             y=((height - ih) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0));
 
             return  new BuildingInfo(x,y,1);

@@ -29,8 +29,8 @@ import java.util.concurrent.Semaphore;
 
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class Preview extends Thread {
-    private final static String TAG = "Preview : ";
+public class Preview2 extends Thread {
+    private final static String TAG = "Preview2 : ";
 
     private Size mPreviewSize;
     private Context mContext;
@@ -39,7 +39,7 @@ public class Preview extends Thread {
     private CameraCaptureSession mPreviewSession;
     private TextureView mTextureView;
 
-    public Preview(Context context, TextureView textureView) {
+    public Preview2(Context context, TextureView textureView) {
         mContext = context;
         mTextureView = textureView;
     }

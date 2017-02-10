@@ -430,6 +430,9 @@ public class NMapViewer extends NMapActivity {
 			Log.i("광개토관",NGeoPoint.getDistance(result, new NGeoPoint(127.0731520, 37.5502760))+"");
 			Log.i("학생회관",NGeoPoint.getDistance(result, new NGeoPoint(127.0752010, 37.5494410))+"");
 
+			//if(ories==null) ories=new List<OriInfo>(){
+
+			//}
 			poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
 
 			poiData.beginPOIdata(ories.size());

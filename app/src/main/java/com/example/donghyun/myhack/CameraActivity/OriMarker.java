@@ -39,7 +39,9 @@ public class OriMarker {
         //markerWidth = oriView.getLayoutParams().width = 500;
         setPositionByOriention();
 
+
         infoText= new TextView(pca.getApplicationContext());
+        fl.addView(infoText, new FrameLayout.LayoutParams(500,100));
         //infoText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         infoText.setText(oi.name);
         //infoText.getLayoutParams().width=500;
@@ -51,14 +53,28 @@ public class OriMarker {
         BuildingInfo pos= ot.getMakerPoint(oi,markerWidth,markerHeight);
         if(pos.alti>0)
         {
+            float nx,ny;
             Log.i("    name   "+oi.desc+"  ","발견됨");
+            nx=oriView.getX();
+            ny=oriView.getY();
+
+            //if(nx-pos.)
             oriView.setVisibility(View.VISIBLE);
-            oriView.setX((float) pos.lat);
-            oriView.setY((float) pos.lon);
+            setPosition((float) pos.lat, (float) pos.lon);
         }
         else
         {
             oriView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void setPosition(float x, float y)
+    {
+        oriView.setX(x);
+        oriView.setY(y);
+
+        infoText.setX(x);
+        infoText.setY(y+500);
+
     }
 }

@@ -15,8 +15,7 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView mCameraTextureView; // ddd
     CameraActivityView cav;
     CameraActivityUpdater cau;
-    private Preview mPreview;
-    private PastPreview pPreview;
+    PreviewManager previewManager;
     int version;
 
 
@@ -35,10 +34,8 @@ public class CameraActivity extends AppCompatActivity {
         dm = getApplicationContext().getResources().getDisplayMetrics();
 
         mCameraTextureView = (TextureView) findViewById(R.id.cameraTextureView);
-        //mPreview = new Preview(this, mCameraTextureView);
 
-        if(version<21)pPreview=new PastPreview(this, mCameraTextureView);
-        else mPreview = new Preview(this, mCameraTextureView);
+        previewManager = new PreviewManager(this, mCameraTextureView);
 
         ot=new Orientation(this, ories);
         cav = new CameraActivityView(this,ories,ot);
@@ -49,13 +46,15 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        PreviewOnResume(version);
+        ot.onResume();
+        previewManager.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        PreviewOnPause(version);
+        ot.onPause();
+        previewManager.onPause();
     }
 
     protected void updateByGPS()
@@ -68,15 +67,4 @@ public class CameraActivity extends AppCompatActivity {
         cau.updateViewByOrientaion();
     }
 
-    protected void PreviewOnResume(int ver)
-    {
-        if(version<21)pPreview.onResume();
-        else mPreview.onResume();
-    }
-
-    protected void PreviewOnPause(int ver)
-    {
-        if(version<21)pPreview.onPause();
-        else mPreview.onPause();
-    }
 }
