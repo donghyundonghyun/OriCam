@@ -300,8 +300,8 @@ public class NMapViewer extends NMapActivity {
 				mMapController.setMapCenter(new NGeoPoint(127.073890,37.550583), 19);
 //				mMapController.setMapCenter(new NGeoPoint(127.044804,37.468642), 19);
 
-				getdata();
 				new MyAsyncTask(poiData).execute(mMapLocationManager);
+				//getdata();
 
 			} else { // fail
 				Log.e(LOG_TAG, "onFailedToInitializeWithError: " + errorInfo.toString());
@@ -395,23 +395,37 @@ public class NMapViewer extends NMapActivity {
 
 
 
-	public void getdata(){
+	public void getdata(double lat, double lon){
 		applicationController = ApplicationController.getInstance();
 		applicationController.buildNetworkService("35.166.255.30", 80);
 		networkService = applicationController.getNetworkService();
 
 		//final ProgressDialog dialog = ProgressDialog.show(this,"","현재위치를 찾고 있습니다.",true);
 
-		Call<List<OriInfo>> DetailCall = networkService.getOries();
+		Call<List<OriInfo>> DetailCall = networkService.getAllOries(lat, lon);
 		DetailCall.enqueue(new Callback<List<OriInfo>>() {
 			@Override
 			public void onResponse(Response<List<OriInfo>> response, Retrofit retrofit) {
 				if (response.isSuccess()) {
-					Gson gson = new Gson();
-					String jsonString = gson.toJson(response.body());
-					Log.i("MyTaggggggggg", jsonString);
+					//Gson gson = new Gson();
+					//String jsonString = gson.toJson(response.body());
+					//Log.i("MyTaggggggggg", jsonString);
 
 					ories = response.body();
+
+					poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
+
+					poiData.beginPOIdata(ories.size());
+
+					for(int i=0;i<ories.size();i++){
+						if(ories.get(i).near == 1) { // 미터단위
+							poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.PIN, 0); //파랑
+						}else{
+							poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.SPOT, 0); //빨강
+						}
+					}
+					poiData.endPOIdata();
+					mOverlayManager.createPOIdataOverlay(poiData, null);
 
 				} else {
 					int statusCode = response.code();
@@ -452,27 +466,13 @@ public class NMapViewer extends NMapActivity {
 		@Override
 		protected void onPostExecute(NGeoPoint result) {
 			super.onPostExecute(result);
+
+			getdata(result.getLatitude(),result.getLongitude());
+
 			if(dialog.isShowing())
 				dialog.dismiss();
 
-			Log.i("현재위치",result.toString());			//		   127.0742002, 37.5522443
-			Log.i("충무관",NGeoPoint.getDistance(result, new NGeoPoint(127.0739520, 37.5522610))+"");
-			Log.i("광개토관",NGeoPoint.getDistance(result, new NGeoPoint(127.0731520, 37.5502760))+"");
-			Log.i("학생회관",NGeoPoint.getDistance(result, new NGeoPoint(127.0752010, 37.5494410))+"");
 
-			poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
-
-			poiData.beginPOIdata(ories.size());
-
-			for(int i=0;i<ories.size();i++){
-				if(NGeoPoint.getDistance(result, new NGeoPoint(ories.get(i).lon, ories.get(i).lat)) < 300.0) { // 미터단위
-					poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.PIN, 0); //파랑
-				}else{
-					poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.SPOT, 0); //빨강
-				}
-			}
-			poiData.endPOIdata();
-			NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
 		}
 
 

@@ -11,9 +11,9 @@ import retrofit.http.Path;
  */
 
 public interface NetworkService {
-    @GET("/index.php/myserver/getOries")
-    Call<List<OriInfo>> getOries();
+    @GET("/index.php/myserver/getAllOries/{lat}/{lon}")
+    Call<List<OriInfo>> getAllOries(@Path("lat") double lat, @Path("lon") double lon);
 
-    @GET("/index.php/myserver/getInfo")
-    Call<OriInfo> getInfo(@Path("ID") long ID);
+    @GET("/index.php/myserver/getOriInfo/{ID}")
+    Call<OriInfo> getOriInfo(@Path("ID") long ID);
 }
