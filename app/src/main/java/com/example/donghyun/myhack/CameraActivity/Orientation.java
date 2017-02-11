@@ -1,19 +1,14 @@
 package com.example.donghyun.myhack.CameraActivity;
 
-import android.content.Intent;
-import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.example.donghyun.myhack.BuildingInfo;
 import com.example.donghyun.myhack.Gpsinfo;
-import com.example.donghyun.myhack.InfoActivity;
 import com.example.donghyun.myhack.OriInfo;
-import com.example.donghyun.myhack.R;
 
 import java.util.ArrayList;
 
@@ -35,7 +30,6 @@ public class Orientation implements SensorEventListener {
 
     private Gpsinfo gpsinfo;
 
-    BuildingInfo[] bi;
     BuildingInfo my;
 
     float viewAngle = 20;
@@ -63,15 +57,7 @@ public class Orientation implements SensorEventListener {
 
         imgWidth = new float[ories.size()];
         imgHeight = new float[ories.size()];
-        bi = new BuildingInfo[ories.size()];
         img = new ImageView[ories.size()];
-
-        for(int i=0;i<ories.size();i++){
-            bi[i] = new BuildingInfo(ories.get(i).lon, ories.get(i).lat, 0);
-        }
-        /*bi[2] = new BuildingInfo(127.075201, 37.549441, 0);//학생회관 37.549441, 127.075201 ->충무
-        bi[1] = new BuildingInfo(127.073152, 37.550276, 0);//광개토 37.550276, 127.073152 ->
-        bi[0] = new BuildingInfo(127.073952, 37.552261,0);//충무관 ->학생*/
 
         width = ma.dm.widthPixels;
         height = ma.dm.heightPixels;
@@ -155,7 +141,7 @@ public class Orientation implements SensorEventListener {
 
     public BuildingInfo getMakerPoint(OriInfo oriinfo,int iw,int ih)
     {
-        BuildingInfo tbi =  new BuildingInfo(oriinfo.lon,oriinfo.lat,0);
+        BuildingInfo tbi =  new BuildingInfo(oriinfo.lat,oriinfo.lon,0);
         bearing = bearingP1toP2(my, tbi);
 
         if(bearing > 180)
@@ -164,12 +150,11 @@ public class Orientation implements SensorEventListener {
         if (isBuildingVisible(bearing, myWay, grad)) {
             double x,y;
 
-            x=((width - iw) / 2 + ((width / 2.0) * ((bearing - myWay) / viewAngle - 5)));
+            x=((width - iw) / 2 + ((width / 2.0) * ((bearing - myWay) / (viewAngle - 5))));
             y=((height - ih) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0));
 
-            return  new BuildingInfo(x,y,1);
+            return new BuildingInfo(x,y,1);
         }
-
         else
         {
             return new BuildingInfo(0,0,-1);

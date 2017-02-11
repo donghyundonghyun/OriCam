@@ -32,7 +32,7 @@
             android:configChanges="keyboardHidden|orientation" />
         <activity android:name=".CameraActivity.CameraActivity" />
         <activity android:name=".InfoActivity"></activity>
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SearchActivity.SearchActivity"></activity>
     </application>
 
 </manifest>

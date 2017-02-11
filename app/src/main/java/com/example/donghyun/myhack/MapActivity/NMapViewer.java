@@ -38,8 +38,7 @@ import com.example.donghyun.myhack.CameraActivity.CameraActivity;
 import com.example.donghyun.myhack.NetworkService;
 import com.example.donghyun.myhack.OriInfo;
 import com.example.donghyun.myhack.R;
-import com.example.donghyun.myhack.SearchActivity;
-import com.google.gson.Gson;
+import com.example.donghyun.myhack.SearchActivity.SearchActivity;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapCompassManager;
 import com.nhn.android.maps.NMapController;
@@ -50,7 +49,6 @@ import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
-import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +126,7 @@ public class NMapViewer extends NMapActivity {
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+				intent.putParcelableArrayListExtra("ories", (ArrayList<? extends Parcelable>) ories);
 				startActivity(intent);
 			}
 		});
@@ -412,6 +411,12 @@ public class NMapViewer extends NMapActivity {
 					//Log.i("MyTaggggggggg", jsonString);
 
 					ories = response.body();
+
+					if(ories == null){
+						Log.i("에러","");
+					}
+
+					Log.i("오리 정보", ories.get(0).name + ", " + ories.get(0).facility);
 
 					poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
 

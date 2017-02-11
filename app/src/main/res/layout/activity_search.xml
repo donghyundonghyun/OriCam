@@ -1,19 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_search"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
-    tools:context="com.example.donghyun.myhack.SearchActivity"
+    tools:context="com.example.donghyun.myhack.SearchActivity.SearchActivity"
     android:padding="10dp"
-    android:background="#ffffff"
-    >
+    android:background="#ffffff">
+
     <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/autocomplete_country"
+        android:id="@+id/autocomplete_ories"
+        android:completionThreshold="1"
+        android:background="@drawable/edittext_round"
+        android:hint=" 건물 명,편의시설 명, 장소 명 "
+        android:paddingLeft="10dp"
+        android:textColor="#aaaaaa"
+        android:textColorHint="#aaaaaa"
+        android:textSize="15dp"
+        android:imeOptions="actionSearch"
+        />
+
+
+</LinearLayout>
+
+
+
+<!--
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_search"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    tools:context="com.example.donghyun.myhack.SearchActivity.SearchActivity"
+    android:padding="10dp"
+    android:background="#ffffff"
+    >
+
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/autocomplete_ories"
         android:completionThreshold="1"
         android:background="@drawable/edittext_round"
         android:hint=" 건물 명,편의시설 명, 장소 명 "
@@ -25,3 +60,4 @@
 
 
 </LinearLayout>
+-->
