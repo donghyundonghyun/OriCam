@@ -19,6 +19,7 @@ package com.example.donghyun.myhack.MapActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -27,6 +28,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,7 +38,7 @@ import com.example.donghyun.myhack.CameraActivity.CameraActivity;
 import com.example.donghyun.myhack.NetworkService;
 import com.example.donghyun.myhack.OriInfo;
 import com.example.donghyun.myhack.R;
-import com.google.gson.Gson;
+import com.example.donghyun.myhack.SearchActivity.SearchActivity;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapCompassManager;
 import com.nhn.android.maps.NMapController;
@@ -47,7 +49,6 @@ import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
-import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ import retrofit.Retrofit;
 
 /**
  * Sample class for map viewer library.
- * 
+ *
  * @author kyjkim
  */
 public class NMapViewer extends NMapActivity {
@@ -82,7 +83,7 @@ public class NMapViewer extends NMapActivity {
 
 	private NMapViewerResourceProvider mMapViewerResourceProvider;
 
-    public NMapPOIdata poiData;
+	public NMapPOIdata poiData;
 
 	ApplicationController applicationController;
 	NetworkService networkService;
@@ -113,26 +114,54 @@ public class NMapViewer extends NMapActivity {
 			}
 		});
 
+		Button searchBtn = new Button(this);
+		searchBtn.setText("건물 명, 편의시설 명, 장소 명");
+		searchBtn.setTextColor(Color.LTGRAY);
+		searchBtn.setBackgroundResource(R.drawable.edittext_round);
+		searchBtn.setHeight(100);
+		searchBtn.setTextSize(15);
+		searchBtn.setGravity(Gravity.LEFT|Gravity.CENTER_VERTICAL);
+
+		searchBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+				intent.putParcelableArrayListExtra("ories", (ArrayList<? extends Parcelable>) ories);
+				startActivity(intent);
+			}
+		});
+
+
 
 		FrameLayout preview = new FrameLayout(this);
 
-
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		params.gravity = Gravity.RIGHT|Gravity.BOTTOM;
-		params.bottomMargin = 100;
-		params.rightMargin = 100;
+		params.leftMargin =0;
+		params.topMargin = 0;
 
 		FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		params1.leftMargin =0;
-		params1.topMargin = 0;
+		params1.gravity = Gravity.RIGHT|Gravity.BOTTOM;
+		params1.bottomMargin = 100;
+		params1.rightMargin = 100;
 
-		preview.addView(mMapView,params1);
-		preview.addView(img,params);
+		FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		params2.gravity = Gravity.CENTER|Gravity.TOP;
+		params2.topMargin = 70;
+		params2.leftMargin = 30;
+		params2.rightMargin = 30;
+
+
+		preview.addView(mMapView,params);
+		preview.addView(img,params1);
+		preview.addView(searchBtn,params2);
+
+
+
+
 		mMapContainerView.addView(preview);
 
 		// set the activity content to the parent view
 		setContentView(mMapContainerView);
-
 
 		// set a registered Client Id for Open MapViewer Library
 		mMapView.setClientId(CLIENT_ID);
@@ -185,46 +214,46 @@ public class NMapViewer extends NMapActivity {
 
 	}
 
-		/* Test Functions */
-		private void startMyLocation() {
+	/* Test Functions */
+	private void startMyLocation() {
 
-            if (mMyLocationOverlay != null) {
-                if (!mOverlayManager.hasOverlay(mMyLocationOverlay)) {
-                    mOverlayManager.addOverlay(mMyLocationOverlay);
-                }
+		if (mMyLocationOverlay != null) {
+			if (!mOverlayManager.hasOverlay(mMyLocationOverlay)) {
+				mOverlayManager.addOverlay(mMyLocationOverlay);
+			}
 
-                if (mMapLocationManager.isMyLocationEnabled()) {
+			if (mMapLocationManager.isMyLocationEnabled()) {
 
-                    if (!mMapView.isAutoRotateEnabled()) {
-                        mMyLocationOverlay.setCompassHeadingVisible(true);
+				if (!mMapView.isAutoRotateEnabled()) {
+					mMyLocationOverlay.setCompassHeadingVisible(true);
 
-                        mMapCompassManager.enableCompass();
-
-
-                        mMapView.setAutoRotateEnabled(true, false);
-
-                        mMapContainerView.requestLayout();
-                    }
-
-                    mMapView.postInvalidate();
+					mMapCompassManager.enableCompass();
 
 
+					mMapView.setAutoRotateEnabled(true, false);
 
-                } else {
-                    boolean isMyLocationEnabled = mMapLocationManager.enableMyLocation(true);
-                    if (!isMyLocationEnabled) {
-                        Toast.makeText(NMapViewer.this, "Please enable a My Location source in system settings",
-                                Toast.LENGTH_LONG).show();
+					mMapContainerView.requestLayout();
+				}
 
-                        Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(goToSettings);
+				mMapView.postInvalidate();
 
-                        return;
-                    }
-                }
-            }
 
+
+			} else {
+				boolean isMyLocationEnabled = mMapLocationManager.enableMyLocation(true);
+				if (!isMyLocationEnabled) {
+					Toast.makeText(NMapViewer.this, "Please enable a My Location source in system settings",
+							Toast.LENGTH_LONG).show();
+
+					Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+					startActivity(goToSettings);
+
+					return;
+				}
+			}
 		}
+
+	}
 
 
 
@@ -235,6 +264,9 @@ public class NMapViewer extends NMapActivity {
 		public boolean onLocationChanged(NMapLocationManager locationManager, NGeoPoint myLocation) {
 			if (mMapController != null) {
 				// mMapController.animateTo(myLocation);
+				//Toast.makeText(getApplicationContext(),myLocation.getLatitude()+"/"+myLocation.getLongitude(),Toast.LENGTH_SHORT).show();
+
+				getdata(myLocation.latitude,myLocation.longitude);
 			}
 
 			return true;
@@ -270,10 +302,10 @@ public class NMapViewer extends NMapActivity {
 				mMapController.setMapCenter(new NGeoPoint(127.073890,37.550583), 19);
 //				mMapController.setMapCenter(new NGeoPoint(127.044804,37.468642), 19);
 
-                getdata();
 				new MyAsyncTask(poiData).execute(mMapLocationManager);
+				//getdata();
 
-            } else { // fail
+			} else { // fail
 				Log.e(LOG_TAG, "onFailedToInitializeWithError: " + errorInfo.toString());
 
 				Toast.makeText(NMapViewer.this, errorInfo.toString(), Toast.LENGTH_LONG).show();
@@ -289,7 +321,7 @@ public class NMapViewer extends NMapActivity {
 
 		@Override
 		public void onMapCenterChange(NMapView mapView, NGeoPoint center) {
-            if (DEBUG) {
+			if (DEBUG) {
 				Log.i(LOG_TAG, "onMapCenterChange: center=" + center.toString());
 			}
 		}
@@ -309,7 +341,7 @@ public class NMapViewer extends NMapActivity {
 
 
 
-	/** 
+	/**
 	 * Container view class to rotate map view.
 	 */
 	private class MapContainerView extends ViewGroup {
@@ -365,23 +397,43 @@ public class NMapViewer extends NMapActivity {
 
 
 
-	public void getdata(){
+	public void getdata(double lat, double lon){
 		applicationController = ApplicationController.getInstance();
 		applicationController.buildNetworkService("35.166.255.30", 80);
 		networkService = applicationController.getNetworkService();
 
 		//final ProgressDialog dialog = ProgressDialog.show(this,"","현재위치를 찾고 있습니다.",true);
 
-		Call<List<OriInfo>> DetailCall = networkService.getOries();
+		Call<List<OriInfo>> DetailCall = networkService.getAllOries(lat, lon);
 		DetailCall.enqueue(new Callback<List<OriInfo>>() {
 			@Override
 			public void onResponse(Response<List<OriInfo>> response, Retrofit retrofit) {
 				if (response.isSuccess()) {
-					Gson gson = new Gson();
-					String jsonString = gson.toJson(response.body());
-					Log.i("MyTaggggggggg", jsonString);
+					//Gson gson = new Gson();
+					//String jsonString = gson.toJson(response.body());
+					//Log.i("MyTaggggggggg", jsonString);
 
 					ories = response.body();
+
+					if(ories == null){
+						Log.i("에러","");
+					}
+
+					Log.i("오리 정보", ories.get(0).name + ", " + ories.get(0).facility);
+
+					mOverlayManager.clearOverlays();
+					poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
+					poiData.beginPOIdata(ories.size());
+					for(int i=0;i<ories.size();i++){
+						if(ories.get(i).near == 1) { // 미터단위
+							poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.PIN, 0); //파랑
+						}else{
+							poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.SPOT, 0); //빨강
+						}
+					}
+					poiData.endPOIdata();
+					mOverlayManager.createPOIdataOverlay(poiData, null);
+
 
 				} else {
 					int statusCode = response.code();
@@ -390,7 +442,7 @@ public class NMapViewer extends NMapActivity {
 			}
 			@Override
 			public void onFailure(Throwable t) {
-				Log.i("MyTag", t.getMessage());
+				//Log.i("MyTag", t.getMessage());
 			}
 		});
 	}
@@ -422,30 +474,12 @@ public class NMapViewer extends NMapActivity {
 		@Override
 		protected void onPostExecute(NGeoPoint result) {
 			super.onPostExecute(result);
+
+			getdata(result.getLatitude(),result.getLongitude());
+
 			if(dialog.isShowing())
 				dialog.dismiss();
 
-			Log.i("현재위치",result.toString());			//		   127.0742002, 37.5522443
-			Log.i("충무관",NGeoPoint.getDistance(result, new NGeoPoint(127.0739520, 37.5522610))+"");
-			Log.i("광개토관",NGeoPoint.getDistance(result, new NGeoPoint(127.0731520, 37.5502760))+"");
-			Log.i("학생회관",NGeoPoint.getDistance(result, new NGeoPoint(127.0752010, 37.5494410))+"");
-
-			//if(ories==null) ories=new List<OriInfo>(){
-
-			//}
-			poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
-
-			poiData.beginPOIdata(ories.size());
-
-			for(int i=0;i<ories.size();i++){
-				if(NGeoPoint.getDistance(result, new NGeoPoint(ories.get(i).lon, ories.get(i).lat)) < 300.0) { // 미터단위
-					poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.PIN, 0); //파랑
-				}else{
-					poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.SPOT, 0); //빨강
-				}
-			}
-			poiData.endPOIdata();
-			NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
 		}
 
 

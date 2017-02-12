@@ -1,24 +1,20 @@
 package com.example.donghyun.myhack.CameraActivity;
 
-import android.content.Intent;
-import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.example.donghyun.myhack.BuildingInfo;
 import com.example.donghyun.myhack.Gpsinfo;
-import com.example.donghyun.myhack.InfoActivity;
 import com.example.donghyun.myhack.OriInfo;
-import com.example.donghyun.myhack.R;
 
 import java.util.ArrayList;
 
 import static android.content.Context.SENSOR_SERVICE;
+
 
 /**
  * Created by DongHyun on 2016-12-20.
@@ -38,8 +34,8 @@ public class Orientation implements SensorEventListener {
 
     private Gpsinfo gpsinfo;
 
-    BuildingInfo[] bi;
     BuildingInfo my;
+    BuildingInfo[] bi;
 
     float viewAngle = 20;
 
@@ -65,10 +61,10 @@ public class Orientation implements SensorEventListener {
         gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext());
 
         my = new BuildingInfo(gpsinfo.getLatitude(), gpsinfo.getLongitude(),0);
+        bi = new BuildingInfo[ories.size()];
 
         imgWidth = new float[ories.size()];
         imgHeight = new float[ories.size()];
-        bi = new BuildingInfo[ories.size()];
         img = new ImageView[ories.size()];
 
         for(int i=0;i<ories.size();i++){
@@ -117,7 +113,7 @@ public class Orientation implements SensorEventListener {
 
     public BuildingInfo getMakerPoint(OriInfo oriinfo,int iw,int ih)
     {
-        BuildingInfo tbi =  new BuildingInfo(oriinfo.lon,oriinfo.lat,0);
+        BuildingInfo tbi =  new BuildingInfo(oriinfo.lat,oriinfo.lon,0);
         bearing = bearingP1toP2(my, tbi);
 
         Log.i(oriinfo.name+":",""+myWay);
@@ -130,9 +126,8 @@ public class Orientation implements SensorEventListener {
             x=((width - iw) / 2 + ((width / 2.0) * ((bearing - myWay) / (viewAngle - 5))));
             y=((height - ih) / 2 + (height / 2.0) * (-(grad + 90.0) / 35.0));
 
-            return  new BuildingInfo(x,y,1);
+            return new BuildingInfo(x,y,1);
         }
-
         else
         {
             return new BuildingInfo(0,0,-1);

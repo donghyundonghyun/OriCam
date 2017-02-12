@@ -1,13 +1,11 @@
 package com.example.donghyun.myhack.CameraActivity;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.donghyun.myhack.BuildingInfo;
-import com.example.donghyun.myhack.Constants;
 import com.example.donghyun.myhack.OriInfo;
 import com.example.donghyun.myhack.R;
 
@@ -44,7 +42,7 @@ public class OriMarker {
         fl.addView(infoText, new FrameLayout.LayoutParams(500,100));
         //infoText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         infoText.setText(oi.name);
-        //infoText.getLayoutParams().width=500;
+        //infoText.getLayoutParams().width=500;a
 
     }
 
@@ -53,12 +51,14 @@ public class OriMarker {
         BuildingInfo pos= ot.getMakerPoint(oi,markerWidth,markerHeight);
         if(pos.alti>0)
         {
+
             float nx,ny;
-            Log.i("    name   "+oi.desc+"  ","발견됨");
+            //Log.i("    name   "+oi.desc+"  ","발견됨");
             nx=oriView.getX();
             ny=oriView.getY();
 
             //if(nx-pos.)
+
             oriView.setVisibility(View.VISIBLE);
             setPosition((float) pos.lat, (float) pos.lon);
         }

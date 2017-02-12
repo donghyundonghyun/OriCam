@@ -8,13 +8,13 @@
         android:normalScreens="true"
         android:smallScreens="true" />
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".ApplicationController"
         android:icon="@drawable/icon"
@@ -29,10 +29,10 @@
         </activity>
         <activity
             android:name=".MapActivity.NMapViewer"
-            android:configChanges="keyboardHidden|orientation"></activity>
-        <activity android:name=".CameraActivity.CameraActivity"></activity>
-
-        <activity android:name=".InfoActivity"/>
+            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".CameraActivity.CameraActivity" />
+        <activity android:name=".InfoActivity"></activity>
+        <activity android:name=".SearchActivity.SearchActivity"></activity>
     </application>
 
 </manifest>

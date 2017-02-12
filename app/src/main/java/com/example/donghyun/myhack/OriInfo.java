@@ -13,15 +13,28 @@ public class OriInfo implements Parcelable{
     public double lat;
     public double alt;
     public String name;
-    public String desc;
+    public String tel;
+    public String addr;
+    public String info;
+    public String etc;
+    public int facility;
+    public double distance;
+    public int near;
 
-    public OriInfo(int ID, double lon, double lat, double alt, String name, String desc) {
+
+    public OriInfo(int ID, double lon, double lat, double alt, String name, String tel, String addr, String info, String etc, int facility, double distance, int near) {
         this.ID = ID;
         this.lon = lon;
         this.lat = lat;
         this.alt = alt;
         this.name = name;
-        this.desc = desc;
+        this.tel = tel;
+        this.addr = addr;
+        this.info = info;
+        this.etc = etc;
+        this.facility = facility;
+        this.distance = distance;
+        this.near = near;
     }
 
     protected OriInfo(Parcel in) {
@@ -30,7 +43,13 @@ public class OriInfo implements Parcelable{
         lat = in.readDouble();
         alt = in.readDouble();
         name = in.readString();
-        desc = in.readString();
+        tel = in.readString();
+        addr = in.readString();
+        info = in.readString();
+        etc = in.readString();
+        facility = in.readInt();
+        distance = in.readDouble();
+        near = in.readInt();
     }
 
     public static final Creator<OriInfo> CREATOR = new Creator<OriInfo>() {
@@ -57,6 +76,12 @@ public class OriInfo implements Parcelable{
         dest.writeDouble(lat);
         dest.writeDouble(alt);
         dest.writeString(name);
-        dest.writeString(desc);
+        dest.writeString(tel);
+        dest.writeString(addr);
+        dest.writeString(info);
+        dest.writeString(etc);
+        dest.writeInt(facility);
+        dest.writeDouble(distance);
+        dest.writeInt(near);
     }
 }
