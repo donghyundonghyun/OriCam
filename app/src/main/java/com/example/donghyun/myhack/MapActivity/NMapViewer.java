@@ -34,7 +34,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.donghyun.myhack.ApplicationController;
-import com.example.donghyun.myhack.CameraActivity.CameraActivity;
+import com.example.donghyun.myhack.InfoActivity;
 import com.example.donghyun.myhack.NetworkService;
 import com.example.donghyun.myhack.OriInfo;
 import com.example.donghyun.myhack.R;
@@ -108,9 +108,20 @@ public class NMapViewer extends NMapActivity {
 		img.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				/*
+				 *
+				 * 잠시 이 버튼 좀 빌리겠습니다. 카메라 버튼 누르면 건물정보페이지로 넘어갑니다.
+				 *
+				*/
+
+				Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
+				startActivity(intent);
+
+				/*
 				Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
 				intent.putParcelableArrayListExtra("ories", (ArrayList<? extends Parcelable>) ories);
 				startActivity(intent);
+				*/
 			}
 		});
 
@@ -142,7 +153,7 @@ public class NMapViewer extends NMapActivity {
 		FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		params1.gravity = Gravity.RIGHT|Gravity.BOTTOM;
 		params1.bottomMargin = 100;
-		params1.rightMargin = 100;
+		params1.rightMargin = 50;
 
 		FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		params2.gravity = Gravity.CENTER|Gravity.TOP;
@@ -150,12 +161,9 @@ public class NMapViewer extends NMapActivity {
 		params2.leftMargin = 30;
 		params2.rightMargin = 30;
 
-
 		preview.addView(mMapView,params);
 		preview.addView(img,params1);
 		preview.addView(searchBtn,params2);
-
-
 
 
 		mMapContainerView.addView(preview);
