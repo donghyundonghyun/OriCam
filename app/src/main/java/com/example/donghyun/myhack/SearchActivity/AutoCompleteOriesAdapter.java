@@ -1,12 +1,15 @@
 package com.example.donghyun.myhack.SearchActivity;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.TextView;
 
 import com.example.donghyun.myhack.OriInfo;
+import com.example.donghyun.myhack.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,7 @@ public class AutoCompleteOriesAdapter extends ArrayAdapter<OriInfo>{
     public View getView(int position, View convertView, ViewGroup parent){
 
         View row = convertView;
-/*
+
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         if(row == null)
@@ -57,7 +60,7 @@ public class AutoCompleteOriesAdapter extends ArrayAdapter<OriInfo>{
         OriInfo ori = filteredOries.get(position);
 
         TextView txt = (TextView) row.findViewById(R.id.ori_name);
-        txt.setText(ori.name);*/
+        txt.setText(ori.name);
 
         return  row;
     }
