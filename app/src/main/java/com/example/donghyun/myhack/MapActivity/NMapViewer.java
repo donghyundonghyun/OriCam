@@ -264,6 +264,9 @@ public class NMapViewer extends NMapActivity {
 		public boolean onLocationChanged(NMapLocationManager locationManager, NGeoPoint myLocation) {
 			if (mMapController != null) {
 				// mMapController.animateTo(myLocation);
+				//Toast.makeText(getApplicationContext(),myLocation.getLatitude()+"/"+myLocation.getLongitude(),Toast.LENGTH_SHORT).show();
+
+				getdata(myLocation.latitude,myLocation.longitude);
 			}
 
 			return true;
@@ -418,10 +421,9 @@ public class NMapViewer extends NMapActivity {
 
 					Log.i("오리 정보", ories.get(0).name + ", " + ories.get(0).facility);
 
+					mOverlayManager.clearOverlays();
 					poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);
-
 					poiData.beginPOIdata(ories.size());
-
 					for(int i=0;i<ories.size();i++){
 						if(ories.get(i).near == 1) { // 미터단위
 							poiData.addPOIitem(ories.get(i).lon, ories.get(i).lat, null, NMapPOIflagType.PIN, 0); //파랑
@@ -432,6 +434,7 @@ public class NMapViewer extends NMapActivity {
 					poiData.endPOIdata();
 					mOverlayManager.createPOIdataOverlay(poiData, null);
 
+
 				} else {
 					int statusCode = response.code();
 					Log.i("MyTag", "에러 상태 코드 : " + statusCode);
@@ -439,7 +442,7 @@ public class NMapViewer extends NMapActivity {
 			}
 			@Override
 			public void onFailure(Throwable t) {
-				Log.i("MyTag", t.getMessage());
+				//Log.i("MyTag", t.getMessage());
 			}
 		});
 	}
