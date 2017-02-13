@@ -58,9 +58,9 @@ public class InfoActivity extends AppCompatActivity {
         listview.setAdapter(adapter);
         listview.setBackgroundColor(Color.WHITE);
 
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.phone),building_Phone) ;
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.facility),building_Facility);
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.info),building_Contents);
+//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.phone),building_Phone) ;
+//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.facility),building_Facility);
+//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.info),building_Contents);
 
     }
 }

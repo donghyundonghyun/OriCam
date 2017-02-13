@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -30,14 +31,12 @@ public class Orientation implements SensorEventListener {
     private Sensor m_ot_sensor;
     private CameraActivity cameraActivity;
 
-    private ImageView[] img;
 
     private Gpsinfo gpsinfo;
 
     BuildingInfo my;
-    BuildingInfo[] bi;
 
-    float viewAngle = 20;
+    float viewAngle = 120;
 
 
     float width;
@@ -51,26 +50,25 @@ public class Orientation implements SensorEventListener {
     ArrayList<OriInfo> ories;
 
 
-    public Orientation(CameraActivity ma, ArrayList<OriInfo> ories)
+    public Orientation(CameraActivity ma)
     {
-        this.ories = ories;
 
         flag=true;
 
         cameraActivity =ma;
-        gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext());
+        gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext(),cameraActivity);
 
         my = new BuildingInfo(gpsinfo.getLatitude(), gpsinfo.getLongitude(),0);
-        bi = new BuildingInfo[ories.size()];
-
-        imgWidth = new float[ories.size()];
-        imgHeight = new float[ories.size()];
-        img = new ImageView[ories.size()];
-
-        for(int i=0;i<ories.size();i++){
-            bi[i] = new BuildingInfo(ories.get(i).lon, ories.get(i).lat, 0);
-        }
-
+//        bi = new BuildingInfo[ories.size()];
+//
+//        imgWidth = new float[ories.size()];
+//        imgHeight = new float[ories.size()];
+//        img = new ImageView[ories.size()];
+//
+//        for(int i=0;i<ories.size();i++){
+//            bi[i] = new BuildingInfo(ories.get(i).lon, ories.get(i).lat, 0);
+//        }
+//
         width = ma.dm.widthPixels;
         height = ma.dm.heightPixels;
 
@@ -116,9 +114,11 @@ public class Orientation implements SensorEventListener {
         BuildingInfo tbi =  new BuildingInfo(oriinfo.lat,oriinfo.lon,0);
         bearing = bearingP1toP2(my, tbi);
 
-        Log.i(oriinfo.name+":",""+myWay);
+
         if(bearing > 180)bearing -= 360;
         else if(bearing<-180) bearing +=360;
+        //Log.i(oriinfo.name+":",""+myWay+" / "+ bearing);
+
 
         if (isBuildingVisible(bearing, myWay, grad)) {
             double x,y;
@@ -187,5 +187,11 @@ public class Orientation implements SensorEventListener {
             return true;
         else
             return false;
+    }
+
+    public void setMyLocation(Location location)
+    {
+        my.lon=location.getLongitude();
+        my.lat=location.getLatitude();
     }
 }

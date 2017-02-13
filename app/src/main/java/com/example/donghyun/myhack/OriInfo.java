@@ -84,4 +84,13 @@ public class OriInfo implements Parcelable{
         dest.writeDouble(distance);
         dest.writeInt(near);
     }
+
+    public boolean isFacilityEntered(int idx)
+    {
+        int mask=1;
+        mask=mask<<idx;
+
+        if((mask&facility)>0)return true;
+        else return false;
+    }
 }

@@ -15,17 +15,19 @@ import java.util.ArrayList;
  */
 
 public class ListViewAdapter extends BaseAdapter {
-    private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
+
+    //private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
 
     public ListViewAdapter() {
 
     }
     @Override
     public int getCount() {
-        return listViewItemList.size() ;
+       // return listViewItemList.size() ;
+        return 0;
     }
 
-    @Override
+//    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
@@ -38,9 +40,9 @@ public class ListViewAdapter extends BaseAdapter {
         ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView1) ;
         TextView titleTextView = (TextView) convertView.findViewById(R.id.textView1) ;
 
-        ListViewItem listViewItem = listViewItemList.get(position);
-        iconImageView.setImageDrawable(listViewItem.getIcon());
-        titleTextView.setText(listViewItem.getTitle());
+//        ListViewItem listViewItem = listViewItemList.get(position);
+//        iconImageView.setImageDrawable(listViewItem.getIcon());
+//        titleTextView.setText(listViewItem.getTitle());
 
         return convertView;
     }
@@ -52,15 +54,16 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return listViewItemList.get(position) ;
+        //return listViewItemList.get(position) ;
+        return 0;
     }
 
     public void addItem(Drawable icon, String title) {
-        ListViewItem item = new ListViewItem();
+//        ListViewItem item = new ListViewItem();
+//
+//        item.setIcon(icon);
+//        item.setTitle(title);
 
-        item.setIcon(icon);
-        item.setTitle(title);
-
-        listViewItemList.add(item);
+       // listViewItemList.add(item);
     }
 }

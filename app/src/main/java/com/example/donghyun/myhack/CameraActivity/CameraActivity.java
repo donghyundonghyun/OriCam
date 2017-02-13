@@ -1,5 +1,6 @@
 package com.example.donghyun.myhack.CameraActivity;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView mCameraTextureView; // ddd
     CameraActivityView cav;
     CameraActivityUpdater cau;
+    OriMarkerListener oml;
     PreviewManager previewManager;
     int version;
 
@@ -37,10 +39,12 @@ public class CameraActivity extends AppCompatActivity {
 
         previewManager = new PreviewManager(this, mCameraTextureView);
 
-        ot=new Orientation(this, ories);
+        ot=new Orientation(this);
         cav = new CameraActivityView(this,ories,ot);
 
-        cau =new CameraActivityUpdater(cav);
+        cau =new CameraActivityUpdater(cav,ot);
+
+        oml =new OriMarkerListener(this);
     }
 
     @Override
@@ -57,9 +61,9 @@ public class CameraActivity extends AppCompatActivity {
         previewManager.onPause();
     }
 
-    protected void updateByGPS()
+    public void updateByGPS(Location location)
     {
-
+        cau.updateByGPS(location);
     }
 
     protected  void updateByOrientaion()

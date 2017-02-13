@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.donghyun.myhack.ApplicationController;
+import com.example.donghyun.myhack.CameraActivity.CameraActivity;
 import com.example.donghyun.myhack.InfoActivity;
 import com.example.donghyun.myhack.NetworkService;
 import com.example.donghyun.myhack.OriInfo;
@@ -114,14 +115,13 @@ public class NMapViewer extends NMapActivity {
 				 *
 				*/
 
-				Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
-				startActivity(intent);
+//				Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
+//				startActivity(intent);
 
-				/*
+
 				Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
 				intent.putParcelableArrayListExtra("ories", (ArrayList<? extends Parcelable>) ories);
 				startActivity(intent);
-				*/
 			}
 		});
 
