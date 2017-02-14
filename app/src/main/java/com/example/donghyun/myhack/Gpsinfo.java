@@ -184,7 +184,7 @@ public class Gpsinfo extends Service implements LocationListener {
 
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
-        cameraActivity.updateByGPS(location);
+        //cameraActivity.updateByGPS(location);
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {

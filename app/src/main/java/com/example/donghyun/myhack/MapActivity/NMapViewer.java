@@ -40,6 +40,7 @@ import com.example.donghyun.myhack.NetworkService;
 import com.example.donghyun.myhack.OriInfo;
 import com.example.donghyun.myhack.R;
 import com.example.donghyun.myhack.SearchActivity.SearchActivity;
+import com.example.donghyun.myhack.UpdateManager;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapCompassManager;
 import com.nhn.android.maps.NMapController;
@@ -89,6 +90,7 @@ public class NMapViewer extends NMapActivity {
 	ApplicationController applicationController;
 	NetworkService networkService;
 	List<OriInfo> ories;
+	UpdateManager updateManager;
 
 
 
@@ -96,6 +98,9 @@ public class NMapViewer extends NMapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//업데이트 내역을 카메라엑티비티와 공유하기 위한 클래스
+		updateManager = UpdateManager.getInstance();
 
 		// create map view
 		mMapView = new NMapView(this);
@@ -405,7 +410,7 @@ public class NMapViewer extends NMapActivity {
 
 
 
-	public void getdata(double lat, double lon){
+	public void getdata(final double lat,final double lon){
 		applicationController = ApplicationController.getInstance();
 		applicationController.buildNetworkService("35.166.255.30", 80);
 		networkService = applicationController.getNetworkService();
@@ -428,6 +433,7 @@ public class NMapViewer extends NMapActivity {
 					}
 
 					Log.i("오리 정보", ories.get(0).name + ", " + ories.get(0).facility);
+					updateManager.update(lat,lon,ories);
 
 					mOverlayManager.clearOverlays();
 					poiData = new NMapPOIdata(ories.size(), mMapViewerResourceProvider);

@@ -8,8 +8,10 @@ import android.view.TextureView;
 
 import com.example.donghyun.myhack.OriInfo;
 import com.example.donghyun.myhack.R;
+import com.example.donghyun.myhack.UpdateManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
     private Orientation ot;
@@ -18,6 +20,7 @@ public class CameraActivity extends AppCompatActivity {
     CameraActivityUpdater cau;
     OriMarkerListener oml;
     PreviewManager previewManager;
+    UpdateManager updateManager;
     int version;
 
 
@@ -45,6 +48,10 @@ public class CameraActivity extends AppCompatActivity {
         cau =new CameraActivityUpdater(cav,ot);
 
         oml =new OriMarkerListener(this);
+
+        updateManager=UpdateManager.getInstance();
+        updateManager.setCameraActivity(this);
+        updateManager.updateCameraActivity();
     }
 
     @Override
@@ -61,9 +68,9 @@ public class CameraActivity extends AppCompatActivity {
         previewManager.onPause();
     }
 
-    public void updateByGPS(Location location)
+    public void updateByGPS(double lat, double lon, List<OriInfo> ories)
     {
-        cau.updateByGPS(location);
+        cau.updateByGPS(lat,lon,ories);
     }
 
     protected  void updateByOrientaion()

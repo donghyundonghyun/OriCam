@@ -3,6 +3,10 @@ package com.example.donghyun.myhack.CameraActivity;
 import android.location.Location;
 import android.util.Log;
 
+import com.example.donghyun.myhack.OriInfo;
+
+import java.util.List;
+
 /**
  * Created by Ahn on 2017-01-24.
  */
@@ -25,10 +29,10 @@ public class CameraActivityUpdater
         for(int i=0;i<num;i++) cav.markerList.get(i).setPositionByOriention();
     }
 
-    public void updateByGPS(Location location)
+    public void updateByGPS(double lat, double lon , List<OriInfo> iol)
     {
-        orientation.setMyLocation(location);
-        cav.setOriMarkerList(null);
-        Log.i("Update!!  >","LAT:: "+location.getLatitude()+" / LON:: "+location.getLongitude());
+        orientation.setMyLocation(lat, lon);
+        cav.setOriMarkerList(iol);
+        Log.i("Update!!  >","LAT:: "+lat+" / LON:: "+lon);
     }
 }

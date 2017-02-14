@@ -32,7 +32,7 @@ public class Orientation implements SensorEventListener {
     private CameraActivity cameraActivity;
 
 
-    private Gpsinfo gpsinfo;
+    //private Gpsinfo gpsinfo;
 
     BuildingInfo my;
 
@@ -56,9 +56,7 @@ public class Orientation implements SensorEventListener {
         flag=true;
 
         cameraActivity =ma;
-        gpsinfo = new Gpsinfo(cameraActivity.getApplicationContext(),cameraActivity);
-
-        my = new BuildingInfo(gpsinfo.getLatitude(), gpsinfo.getLongitude(),0);
+        my = new BuildingInfo(0,0,0);
 //        bi = new BuildingInfo[ories.size()];
 //
 //        imgWidth = new float[ories.size()];
@@ -189,9 +187,9 @@ public class Orientation implements SensorEventListener {
             return false;
     }
 
-    public void setMyLocation(Location location)
+    public void setMyLocation(double lat, double lon)
     {
-        my.lon=location.getLongitude();
-        my.lat=location.getLatitude();
+        my.lon=lon;
+        my.lat=lat;
     }
 }

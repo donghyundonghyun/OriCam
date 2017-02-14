@@ -32,7 +32,7 @@ public class OriMarker {
         fl = (FrameLayout) pca.findViewById(R.id.activity_main);
         oi= poi;
         ot= pot;
-
+        
         oriView= new ImageView(pca.getApplicationContext());
         oriView.setImageResource(R.drawable.duck1);
         oriView.setTag(oi.ID);
@@ -56,13 +56,13 @@ public class OriMarker {
         facilityView = new ImageView[4];
         for(int i=0;i<4;i++)facilityView[i]=new ImageView(pca.getApplicationContext());
 
-        if(oi.isFacilityEntered(0))facilityView[0].setImageResource(R.drawable.icon_restaurant);
+        if(oi.isFacilityEntered(0))facilityView[0].setImageResource(R.drawable.icon_restaurant2);
         else facilityView[0].setImageResource(R.drawable.icon_restaurant);
-        if(oi.isFacilityEntered(0))facilityView[1].setImageResource(R.drawable.icon_cafe);
+        if(oi.isFacilityEntered(1))facilityView[1].setImageResource(R.drawable.icon_cafe2);
         else facilityView[1].setImageResource(R.drawable.icon_cafe);
-        if(oi.isFacilityEntered(0))facilityView[2].setImageResource(R.drawable.icon_convenience);
+        if(oi.isFacilityEntered(2))facilityView[2].setImageResource(R.drawable.icon_convenience2);
         else facilityView[2].setImageResource(R.drawable.icon_convenience);
-        if(oi.isFacilityEntered(0))facilityView[3].setImageResource(R.drawable.icon_restroom);
+        if(oi.isFacilityEntered(3))facilityView[3].setImageResource(R.drawable.icon_restroom2);
         else facilityView[3].setImageResource(R.drawable.icon_restroom);
         for(int i=0;i<4;i++)fl.addView(facilityView[i], new FrameLayout.LayoutParams(80,80));
 
