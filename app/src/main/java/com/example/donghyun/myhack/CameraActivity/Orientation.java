@@ -116,7 +116,7 @@ public class Orientation implements SensorEventListener {
 
 
         if(bearing > 180)bearing -= 360;
-        else if(bearing<-180) bearing +=360;
+ //       else if(bearing<-180) bearing +=360;
         //Log.i(oriinfo.name+":",""+myWay+" / "+ bearing);
 
 

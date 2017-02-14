@@ -1,5 +1,6 @@
 package com.example.donghyun.myhack.CameraActivity;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -34,6 +35,7 @@ public class OriMarker {
 
         oriView= new ImageView(pca.getApplicationContext());
         oriView.setImageResource(R.drawable.duck1);
+        oriView.setTag(oi.ID);
         oriView.setOnClickListener(OriMarkerListener.getInstance());
         fl.addView(oriView, new FrameLayout.LayoutParams(500,500));
         //markerHeight = oriView.getLayoutParams().height = 500;

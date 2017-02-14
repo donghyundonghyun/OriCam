@@ -15,5 +15,5 @@ public interface NetworkService {
     Call<List<OriInfo>> getAllOries(@Path("lat") double lat, @Path("lon") double lon);
 
     @GET("/index.php/myserver/getOriInfo/{ID}")
-    Call<OriInfo> getOriInfo(@Path("ID") long ID);
+    Call<OriInfo> getOriInfo(@Path("ID") int ID);
 }

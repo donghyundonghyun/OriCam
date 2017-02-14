@@ -29,7 +29,9 @@ public class OriMarkerListener implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(cameraActivity.getApplicationContext(), InfoActivity.class);
-        System.out.println("clicked!!");
+        //System.out.println("clicked!!");
+        int ID = (int) v.getTag();
+        intent.putExtra("ID", ID);
         cameraActivity.startActivity(intent);
     }
 }
