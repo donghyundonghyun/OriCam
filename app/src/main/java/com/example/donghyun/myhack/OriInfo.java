@@ -22,6 +22,8 @@ public class OriInfo implements Parcelable{
     public int near;
 
 
+
+
     public OriInfo(int ID, double lon, double lat, double alt, String name, String tel, String addr, String info, String etc, int facility, double distance, int near) {
         this.ID = ID;
         this.lon = lon;
@@ -36,6 +38,14 @@ public class OriInfo implements Parcelable{
         this.distance = distance;
         this.near = near;
     }
+
+    public OriInfo()
+    {
+        this.ID = -1;
+        this.name="init value";
+        this.distance= -100;
+    }
+
 
     protected OriInfo(Parcel in) {
         ID = in.readInt();

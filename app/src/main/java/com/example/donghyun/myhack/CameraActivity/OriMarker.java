@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.donghyun.myhack.BuildingInfo;
 import com.example.donghyun.myhack.OriInfo;
 import com.example.donghyun.myhack.R;
@@ -18,6 +20,7 @@ import com.example.donghyun.myhack.R;
 public class OriMarker {
 
     FrameLayout fl;
+    CameraActivity ca;
     OriInfo oi;
     Orientation ot;
     ImageView oriView;
@@ -26,15 +29,23 @@ public class OriMarker {
     TextView infoText;
 
     public int markerWidth, markerHeight;
+    private String urlPostfix = "http://35.166.255.30/static/img/";
+    private String fileName;
 
     public OriMarker(CameraActivity pca, OriInfo poi, Orientation pot)
     {
         fl = (FrameLayout) pca.findViewById(R.id.activity_main);
+        ca =pca;
         oi= poi;
         ot= pot;
-        
+
+        //ca.isDestroyed()
+
         oriView= new ImageView(pca.getApplicationContext());
-        oriView.setImageResource(R.drawable.duck1);
+
+        updateFileName(oi);
+        Glide.with(ca).load(urlPostfix+fileName).into(oriView);
+
         oriView.setTag(oi.ID);
         oriView.setOnClickListener(OriMarkerListener.getInstance());
         fl.addView(oriView, new FrameLayout.LayoutParams(500,500));
@@ -44,18 +55,19 @@ public class OriMarker {
         infoText= new TextView(pca.getApplicationContext());
         fl.addView(infoText, new FrameLayout.LayoutParams(500,100));
         infoText.setGravity(Gravity.CENTER_HORIZONTAL);
-        infoText.setText(oi.name+": "+(int)oi.distance+"m");
+        setInfoTextByNearValue(oi);
         //infoText.setBackgroundColor(Color.BLACK);
         //infoText.getLayoutParams().width=500;a
 
         SBView = new ImageView(pca.getApplicationContext());
+        SBView.setVisibility(View.INVISIBLE);
         SBView.setScaleType(ImageView.ScaleType.FIT_XY);
         SBView.setImageResource(R.drawable.bg_speech);
         fl.addView(SBView,new FrameLayout.LayoutParams(500,140));
 
         facilityView = new ImageView[4];
         for(int i=0;i<4;i++)facilityView[i]=new ImageView(pca.getApplicationContext());
-
+        for(int i=0;i<4;i++)facilityView[i].setVisibility(View.INVISIBLE);
         if(oi.isFacilityEntered(0))facilityView[0].setImageResource(R.drawable.icon_restaurant2);
         else facilityView[0].setImageResource(R.drawable.icon_restaurant);
         if(oi.isFacilityEntered(1))facilityView[1].setImageResource(R.drawable.icon_cafe2);
@@ -65,6 +77,12 @@ public class OriMarker {
         if(oi.isFacilityEntered(3))facilityView[3].setImageResource(R.drawable.icon_restroom2);
         else facilityView[3].setImageResource(R.drawable.icon_restroom);
         for(int i=0;i<4;i++)fl.addView(facilityView[i], new FrameLayout.LayoutParams(80,80));
+
+        if(oi.near==1)
+        {
+            SBView.setVisibility(View.VISIBLE);
+            for(int i=0;i<4;i++)facilityView[i].setVisibility(View.VISIBLE);
+        }
 
         setPositionByOriention();
     }
@@ -107,8 +125,23 @@ public class OriMarker {
             facilityView[i].setX(x+60+100*i);
             facilityView[i].setY(y-100);
         }
+    }
+
+    public void setVisibleFacilityView(boolean tf)
+    {
+        if(tf==true)
+        {
+            SBView.setVisibility(View.VISIBLE);
+            for(int i=0;i<4;i++)facilityView[i].setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            SBView.setVisibility(View.INVISIBLE);
+            for(int i=0;i<4;i++)facilityView[i].setVisibility(View.INVISIBLE);
+        }
 
     }
+
 
     public void setVisible(boolean tf)
     {
@@ -116,8 +149,8 @@ public class OriMarker {
         {
             oriView.setVisibility(View.VISIBLE);
             infoText.setVisibility(View.VISIBLE);
-            SBView.setVisibility(View.VISIBLE);
-            for(int i=0;i<4;i++)facilityView[i].setVisibility(View.VISIBLE);
+            if(oi.near==1)setVisibleFacilityView(true);
+            else setVisibleFacilityView(false);
         }
         else
         {
@@ -126,6 +159,25 @@ public class OriMarker {
             SBView.setVisibility(View.INVISIBLE);
             for(int i=0;i<4;i++)facilityView[i].setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void updateOriInfo(OriInfo poi)
+    {
+        oi= poi;
+        setInfoTextByNearValue(oi);
+    }
+
+    public void updateFileName(OriInfo poi)
+    {
+        fileName = oi.ID+"_";
+        if(oi.near==2)fileName=fileName+"sil.png";
+        else if (oi.near==1)fileName=fileName+"real.png";
+    }
+
+    public void setInfoTextByNearValue(OriInfo poi)
+    {
+        if(poi.near==1)infoText.setText(oi.name+": "+(int)oi.distance+"m");
+        else infoText.setText("???"+": "+(int)oi.distance+"m");
     }
 
 }

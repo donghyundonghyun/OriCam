@@ -45,7 +45,7 @@ public class CameraActivity extends AppCompatActivity {
         ot=new Orientation(this);
         cav = new CameraActivityView(this,ories,ot);
 
-        cau =new CameraActivityUpdater(cav,ot);
+        cau =new CameraActivityUpdater(cav,ot,this);
 
         oml =new OriMarkerListener(this);
 
