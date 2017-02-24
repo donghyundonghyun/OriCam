@@ -70,7 +70,14 @@ public class InfoActivity extends AppCompatActivity {
         listview.setAdapter(adapter);
         listview.setBackgroundColor(Color.WHITE);
 
-        Glide.with(this).load("http://35.166.255.30/static/img/1.png").thumbnail(0.1f).into(buildingImgV);
+        Glide.with(this).load("http://35.166.255.30/static/img/"+oriID+"_info.jpg").placeholder(R.drawable.loading).into(buildingImgV);
+        /*Glide.with(this)
+                .load("http://35.166.255.30/static/img/"+oriID+"_info.jpg")
+                .asGif()
+                .placeholder(R.drawable.loading)
+                .into(new GlideDrawableImageViewTarget(buildingImgV));
+*/
+
 
         setdata();
     }
@@ -96,12 +103,14 @@ public class InfoActivity extends AppCompatActivity {
 
                     Log.i("TEST",oi.info);
 
-                    /*Log.i("phone",oi.tel);
+                    Log.i("phone",oi.tel);
                     Log.i("fac",oi.facility+"");
-                    Log.i("info",oi.info);*/
+                    Log.i("info",oi.info);
+
                     adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.phone), oi.tel) ;
                     adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.facility), oi.facility+"");
                     adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info), oi.info);
+                    adapter.notifyDataSetChanged();
 
                 } else {
                     int statusCode = response.code();
