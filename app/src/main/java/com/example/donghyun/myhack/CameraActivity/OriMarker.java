@@ -1,12 +1,10 @@
 package com.example.donghyun.myhack.CameraActivity;
 
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.donghyun.myhack.BuildingInfo;
@@ -53,8 +51,9 @@ public class OriMarker {
         //markerWidth = oriView.getLayoutParams().width = 500;
 
         infoText= new TextView(pca.getApplicationContext());
-        fl.addView(infoText, new FrameLayout.LayoutParams(500,100));
-        infoText.setGravity(Gravity.CENTER_HORIZONTAL);
+        infoText.setBackgroundResource(R.drawable.name_back);
+        fl.addView(infoText, new FrameLayout.LayoutParams(500,70));
+        infoText.setGravity(Gravity.CENTER);
         //infoText.setBackground();
         setInfoTextByNearValue(oi);
         //infoText.setBackgroundColor(Color.BLACK);
