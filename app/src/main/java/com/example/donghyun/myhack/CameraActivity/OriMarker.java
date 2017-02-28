@@ -46,7 +46,7 @@ public class OriMarker {
         updateFileName(oi);
         Glide.with(ca).load(urlPostfix+fileName).into(oriView);
 
-        oriView.setTag(oi.ID);
+        oriView.setTag(poi);
         oriView.setOnClickListener(OriMarkerListener.getInstance());
         fl.addView(oriView, new FrameLayout.LayoutParams(500,500));
         //markerHeight = oriView.getLayoutParams().height = 500;
@@ -55,6 +55,7 @@ public class OriMarker {
         infoText= new TextView(pca.getApplicationContext());
         fl.addView(infoText, new FrameLayout.LayoutParams(500,100));
         infoText.setGravity(Gravity.CENTER_HORIZONTAL);
+        //infoText.setBackground();
         setInfoTextByNearValue(oi);
         //infoText.setBackgroundColor(Color.BLACK);
         //infoText.getLayoutParams().width=500;a
@@ -84,7 +85,7 @@ public class OriMarker {
             for(int i=0;i<4;i++)facilityView[i].setVisibility(View.VISIBLE);
         }
 
-        setPositionByOriention();
+        //setPositionByOriention();
     }
 
     public void setPositionByOriention()
@@ -178,6 +179,14 @@ public class OriMarker {
     {
         if(poi.near==1)infoText.setText(oi.name+": "+(int)oi.distance+"m");
         else infoText.setText("???"+": "+(int)oi.distance+"m");
+    }
+
+    public void bringChildToFront()
+    {
+        oriView.bringToFront();
+        SBView.bringToFront();
+        for(int i=0;i<4;i++) facilityView[i].bringToFront();
+        infoText.bringToFront();
     }
 
 }

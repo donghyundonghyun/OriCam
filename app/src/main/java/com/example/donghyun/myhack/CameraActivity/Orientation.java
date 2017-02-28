@@ -36,7 +36,7 @@ public class Orientation implements SensorEventListener {
 
     BuildingInfo my;
 
-    float viewAngle = 120;
+    float viewAngle = 30;
 
 
     float width;

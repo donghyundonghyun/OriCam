@@ -30,7 +30,15 @@ public class CameraActivityUpdater
     {
         //Log.i("    업데이트   ","호출");
         int num = cav.markerList.size();
-        for(int i=0;i<num;i++) cav.markerList.get(i).setPositionByOriention();
+        for(int i=num-1;i>-1;i--)
+        {
+            cav.markerList.get(i).setPositionByOriention();
+            cav.markerList.get(i).bringChildToFront();
+        }
+
+       //for(int i=0;i<cav.markerList.size();i++) Log.i("<lat::"+cav.markerList.get(i).oi.lat+">","<lon::"+cav.markerList.get(i).oi.lon+">");
+        //Log.i("<lat::"+orientation.my.lat+">","<lon::"+orientation.my.lon+">");
+        //Log.i("//------------",">");
     }
 
     public void updateByGPS(double lat, double lon , List<OriInfo> iol)
@@ -38,7 +46,7 @@ public class CameraActivityUpdater
         int minDistance=200;
 
         orientation.setMyLocation(lat, lon);
-
+        Log.i("ott LAT::"+lat,"ott LON::"+lon);
         ArrayList<OriMarker> markerList;
         ArrayList<OriMarker> postMarkerList;
         OriInfo oriInfo;
@@ -49,7 +57,8 @@ public class CameraActivityUpdater
         postMarkerList = cav.getOriMarkerList();
        int pIndex=-1;
 
-        for(int i=0;i<iol.size(); i++)
+        //for(int i=iol.size()-1;i>-1; i--)
+        for(int i=0;i<iol.size();i++)
         {
             boolean eFlag=false;
 
@@ -78,10 +87,11 @@ public class CameraActivityUpdater
             }
         }
 
-        if(minDistance<=100)Toast.makeText(ca.getApplicationContext(),"근처에 오리가 있습니다"+"( "+minDistance+"m )",Toast.LENGTH_SHORT);
+        if(minDistance<=100)Toast.makeText(ca.getApplicationContext(),"근처에 오리가 있습니다"+"( "+minDistance+"m )",Toast.LENGTH_SHORT).show();
         cav.setOriMarkerList(markerList);
 
-        for(int i=markerList.size()-1;i>-1; i--)
+        //for(int i=markerList.size()-1;i>-1; i--)
+        for(int i=0;i<markerList.size();i++)
         {
             Log.i(markerList.get(i).oi.name,"_distance :"+markerList.get(i).oi.distance);
             markerList.get(i).setPositionByOriention();

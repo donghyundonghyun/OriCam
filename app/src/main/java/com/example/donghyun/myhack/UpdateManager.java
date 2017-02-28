@@ -1,6 +1,7 @@
 package com.example.donghyun.myhack;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.example.donghyun.myhack.CameraActivity.CameraActivity;
 
@@ -35,6 +36,7 @@ public class UpdateManager {
 
     public void updateCameraActivity()
     {
+        Log.i("up LAT::"+lat,"up LON::"+lon);
         cameraActivity.updateByGPS(lat,lon,oil);
     }
 

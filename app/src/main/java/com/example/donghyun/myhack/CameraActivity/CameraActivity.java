@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.TextureView;
 
 import com.example.donghyun.myhack.OriInfo;
@@ -22,6 +23,7 @@ public class CameraActivity extends AppCompatActivity {
     PreviewManager previewManager;
     UpdateManager updateManager;
     int version;
+    boolean pFlag;
 
 
     private ArrayList<OriInfo> ories;
@@ -32,6 +34,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        pFlag=true;
 
         ories = getIntent().getParcelableArrayListExtra("ories"); //수정필요
 
@@ -45,6 +48,7 @@ public class CameraActivity extends AppCompatActivity {
         ot=new Orientation(this);
         cav = new CameraActivityView(this,ories,ot);
 
+
         cau =new CameraActivityUpdater(cav,ot,this);
 
         oml =new OriMarkerListener(this);
@@ -57,6 +61,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        pFlag=true;
         ot.onResume();
         previewManager.onResume();
     }
@@ -64,12 +69,14 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        pFlag=false;
         ot.onPause();
         previewManager.onPause();
     }
 
     public void updateByGPS(double lat, double lon, List<OriInfo> ories)
     {
+        if(pFlag==false)return;
         cau.updateByGPS(lat,lon,ories);
     }
 
