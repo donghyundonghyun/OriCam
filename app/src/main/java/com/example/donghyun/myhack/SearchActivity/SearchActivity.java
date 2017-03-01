@@ -42,7 +42,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 //Test
                 Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
-                intent.putExtra("index", ori.ID);
+                intent.putExtra("ID", ori.ID);
                 startActivity(intent);
             }
         };
